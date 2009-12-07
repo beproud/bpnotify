@@ -7,6 +7,15 @@ from django.conf import settings
 import conf
 from models import *
 
+__all__ = (
+    'render_notification',
+    'send_notification',
+    'send_notification_now',
+    'get_notification_setting',
+    'set_notification_setting',
+    'view_notification',
+)
+
 def render_notification(notification, template, extra_context={}):
     context = {
         'notification': notification,
@@ -17,6 +26,8 @@ def render_notification(notification, template, extra_context={}):
 
 def render_notice_type(notice_type, template, extra_context={}):
     from django.template.loader import render_to_string
+
+    #TODO: fix DOMAIN
     context = {
         'domain': settings.DOMAIN, 
     }
