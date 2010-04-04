@@ -7,7 +7,7 @@ from users.models import User,Customer
 
 import conf
 from mail import *
-from engine import *
+from api import *
 
 class BasicNotificationTest(TestCase):
     fixtures = ['basic_users.json']

@@ -3,7 +3,7 @@
 from django.template import Node, Library, TemplateDoesNotExist, TemplateSyntaxError, Variable
 from django.template.loader import render_to_string
 
-from notify.engine import render_notification
+from notify import render_notification
 
 register = Library()
 
