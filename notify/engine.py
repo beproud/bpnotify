@@ -3,6 +3,7 @@ from datetime import datetime
 
 from django.contrib.sites.models import Site
 from django.conf import settings
+from django.template.loader import render_to_string
 
 import conf
 from models import *
@@ -13,7 +14,6 @@ __all__ = (
     'send_notification_now',
     'get_notification_setting',
     'set_notification_setting',
-    'view_notification',
 )
 
 def render_notification(notification, template, extra_context={}):
@@ -25,17 +25,12 @@ def render_notification(notification, template, extra_context={}):
     return render_notice_type(notification.notice_type, template, context)
 
 def render_notice_type(notice_type, template, extra_context={}):
-    from django.template.loader import render_to_string
-
-    #TODO: fix DOMAIN
-    context = {
-        'domain': settings.DOMAIN, 
-    }
-    context.update(extra_context)
-
-    return render_to_string('notify/%s/%s' % (notice_type.lower(), template), context)
+    return render_to_string('notify/%s/%s' % (notice_type.lower(), template), extra_context)
 
 def send_notification(users, notice_type, extra_context={}, target_id=None, origin_id=None, ctime=None, exclude_media=[]):
+    """
+    通知を送る。できれば、非同期で
+    """
     if 'celery' in settings.INSTALLED_APPS:
         import tasks
         return tasks.SendNotification.delay(
@@ -52,7 +47,7 @@ def send_notification(users, notice_type, extra_context={}, target_id=None, orig
 
 def send_notification_now(users, notice_type, extra_context={}, target_id=None, origin_id=None, ctime=None, exclude_media=[]):
     u"""
-    通知を送る
+    通知を同期で送る
     """
     if isinstance(users, User):
         users = [users]
@@ -119,8 +114,3 @@ def set_notification_setting(user, notice_type, media, send):
             send = send,
         )
     return setting.save()
-
-def view_notification(**kwargs):
-    # signalなどに対応するため、一個一個削除
-    for n in Notification.objects.filter(**kwargs):
-        n.delete()
