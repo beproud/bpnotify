@@ -1,10 +1,12 @@
 #:coding=utf-8:
 
+from datetime import datetime
+
 from base import BaseNotify
 from django.db import DatabaseError
 
 class ModelNotify(BaseNotify):
-    def send(user, notice_type, extra_context={}, target_id=None, origin_id=None, date=None):
+    def _send(user, notice_type, extra_context={}, target_id=None, origin_id=None, date=None):
         try:
             notification = Notification.objects.create(
                 user = user,
