@@ -1,34 +1,44 @@
 #:coding=utf8:
 
 from django.core import mail
+from django.conf import settings
 from test import TestCase
 
 from users.models import User,Customer
 
-import conf
 from mail import *
 from api import *
 
-class BasicNotificationTest(TestCase):
+class BaseTest(object):
+    def tearDown(self):
+        for attr in ["NOTICE_TYPES", "NOTICE_MEDIA",
+                     "NOTICE_MEDIA_MAP", "NOTICE_MEDIA_DEFAULTS"]:
+        if hasattr(settings, attr):
+            delattr(settings, attr)
+
+class BasicNoticeTest(BaseTest, TestCase):
     fixtures = ['basic_users.json']
 
     def setUp(self):
-        conf.NOTICE_TYPES = list(conf.NOTICE_TYPES)
-        conf.NOTICE_TYPES.append(
+        settings.NOTICE_TYPES = (
             ('TEST_NOTICE', u'テスト通知'),
         )
-        conf.NOTICE_TYPES_DICT['TEST_NOTICE'] = u'テスト通知'
-        conf.MEDIA_DEFAULTS['TEST_NOTICE'] = {
-            'EMAIL': True,
-            'RECENT_EVENTS': True,
+        settings.NOTICE_MEDIA = {
+            "TEST_MEDIA": {
+                "verbose_name": "My Test Media",
+                "backends": ['model'],
+            }
         }
-        
-        self.customer = Customer.objects.get(pk=2)
-        self.users = list(User.objects.be().filter(customer=self.customer))
+        settings.MEDIA_DEFAULTS = {
+            'TEST_NOTICE': {
+                'TEST_MEDIA': True,
+            }
+        }
     
     def test_sending(self):
-        send_notification(self.users, 'TEST_NOTICE')
+        user = User.objects.get(pk=2)
+        items_sent = send_notification(user, 'TEST_NOTICE')
+        self.assertEquals(items_sent, 1)
 
-        self.assertEquals(len(mail.outbox), len(self.users))
-        for obj in mail.outbox:
-          message = obj.message() # エラーがないかをチェック
+        all_notices = Notification.objects.all()
+        self.assertEquals(len(all_notices), 1)
