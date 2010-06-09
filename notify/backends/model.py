@@ -1,9 +1,11 @@
 #:coding=utf-8:
 
 from base import BaseNotify
+from django.db import DatabaseError
 
 class ModelNotify(BaseNotify):
-    def send(users, notice_type, extra_context={}, target_id=None, origin_id=None, date=None):
+    def send(user, notice_type, extra_context={}, target_id=None, origin_id=None, date=None):
+        try:
             notification = Notification.objects.create(
                 user = user,
                 notice_type = notice_type,
@@ -12,4 +14,6 @@ class ModelNotify(BaseNotify):
                 origin_id = origin_id,
                 ctime = ctime if ctime else datetime.now(),
             )
-
+            return 1
+        except DatabaseError:
+            return 0
