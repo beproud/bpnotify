@@ -2,7 +2,7 @@
 
 class BaseBackend(object):
 
-    def send(targets, notify_type, media, extra_context={}):
+    def send(self, targets, notify_type, media, extra_data={}):
         """
         Sends a message to the given users.
 
@@ -13,15 +13,15 @@ class BaseBackend(object):
                        the notification
         Returns the number of notifications sent.
         """
+        num_sent = 0
         for target in targets:
-            self._send(
-                target,
-                notice_type,
-                extra_content,
-                target_id,
-                origin_id,
-                date or datetime.now(),
+            num_sent += self._send(
+                target=target,
+                notify_type=notify_type,
+                media=media,
+                extra_data=extra_data,
             )
+        return num_sent
 
-    def _send(user, notice_type, media, extra_context={})
+    def _send(self, target, notify_type, media, extra_data={}):
         raise NotImplemented('You must implement the _send() method in from the BaseBackend class.')

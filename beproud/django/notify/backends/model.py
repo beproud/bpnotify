@@ -1,17 +1,18 @@
 #:coding=utf-8:
 
 from beproud.django.notify.backends.base import BaseBackend
-from beproud.django.notify.models import Notification
 from django.db import DatabaseError
 
-class NotifyBackend(BaseNotify):
+class ModelBackend(BaseBackend):
     """
     A basic backend that saves to the default
     Notification model. Extra data must be JSON serializable.
     """
-    def _send(target, notice_type, media, extra_data={}):
+    def _send(self, target, notify_type, media, extra_data={}):
+        from beproud.django.notify.models import Notification
+
         notification = Notification(
-            notice_type = notice_type,
+            notify_type = notify_type,
             media = media,
             extra_data = extra_data,
         )
@@ -20,7 +21,7 @@ class NotifyBackend(BaseNotify):
         try:
             notification.save()
             return 1
-        except (TypeError, DatabaseError):
+        except (TypeError, DatabaseError), e:
             # extra_data could not be serialized to JSON or
             # there was some kind of Database error
             # TODO: logging

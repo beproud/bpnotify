@@ -30,12 +30,12 @@ def main():
                 "beproud.django.notify.backends.model.ModelBackend",
             ),
         },
-        "private_msg": {
+        "private_messages": {
             "verbose_name": "Private Message",
             "default_types": ("private_msg",),
             "backends": (
                 "beproud.django.notify.backends.model.ModelBackend",
-                "beproud.django.notify.backends.mail.MailBackend",
+                "beproud.django.notify.backends.mail.EmailBackend",
             ),
         },
     }

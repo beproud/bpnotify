@@ -8,7 +8,7 @@ AVAILABLE_SETTINGS = (
     'BPAUTH_SETTINGS_BACKEND',
 )
 
-class BaseTestCase(object):
+class TestBase(object):
     def setUp(self):
         for setting_name in AVAILABLE_SETTINGS:
             setting_value = getattr(self, setting_name, None)

@@ -1,3 +1,3 @@
 Django>=1.1.1
 
--e hg+https://bitbucket.org/IanLewis/django-jsonfield/@8258f513f125#egg=jsonfield
+-e hg+https://bitbucket.org/IanLewis/django-jsonfield/@2da5c611d425#egg=jsonfield

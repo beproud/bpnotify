@@ -8,16 +8,16 @@ from django.conf import settings
 
 from beproud.django.notify.backends.base import BaseBackend
 
-class EmailBackend(BaseNotify):
+class EmailBackend(BaseBackend):
     """
     A backend that sends email for the given notification type.
 
     The email content is rendered from a template found in the
     following templates:
 
-    notify/<notice_type>/<media>/mail_subject.txt
-    notify/<notice_type>/<media>/mail_body.html
-    notify/<notice_type>/<media>/mail_body.txt
+    notify/<notify_type>/<media>/mail_subject.txt
+    notify/<notify_type>/<media>/mail_body.html
+    notify/<notify_type>/<media>/mail_body.txt
 
     The body templates can contain both html and text, only html, or only text.
     The EmailBackend does the following:
@@ -35,10 +35,10 @@ class EmailBackend(BaseNotify):
     If both html and a text template are found then the email is sent as multipart
     with the rendered content.
     """
-    def send(targets, notice_type, media, extra_data={}):
-        subject_template = 'notify/%s/%s/mail_subject.txt' % (notice_type, media)
-        body_html_template = 'notify/%s/%s/mail_body.html' % (notice_type, media)
-        body_text_template = 'notify/%s/%s/mail_body.txt' % (notice_type, media)
+    def send(self, targets, notify_type, media, extra_data={}):
+        subject_template = 'notify/%s/%s/mail_subject.txt' % (notify_type, media)
+        body_html_template = 'notify/%s/%s/mail_body.html' % (notify_type, media)
+        body_text_template = 'notify/%s/%s/mail_body.txt' % (notify_type, media)
 
         messages = []
     
@@ -48,7 +48,7 @@ class EmailBackend(BaseNotify):
                 if to_email:
                         context = {
                             'target': target,
-                            'notice_type': notice_type,
+                            'notify_type': notify_type,
                             'media': media,
                         }
                         context.update(extra_data)

@@ -71,7 +71,7 @@ def load_backend(backend_path):
     Load the auth backend with the given name
     """
     try:
-        return import_string(backend_path)
+        return import_string(backend_path)()
     except (ImportError, AttributeError), e:
         raise ImproperlyConfigured('Error importing notify backend %s: "%s"' % (backend_path, e))
     except ValueError, e:
@@ -79,17 +79,23 @@ def load_backend(backend_path):
 load_backend = memoize(load_backend, _notify_backend_cache, 1)
 
 def notify(targets, notify_type, extra_data={}, include_media=None, exclude_media=[]):
+    from django.conf import settings
+
     if 'djcelery' in settings.INSTALLED_APPS:
         from django.contrib.contenttypes.models import ContentType
         from beproud.django.notify import tasks
 
-        return tasks.Notify.delay(
+        if not hasattr(targets, '__iter__'):
+            targets = [targets]
+
+        tasks.Notify.delay(
             targets=[(ContentType.get_for_model(target).pk, target.pk) for target in targets],
             notify_type=notify_type,
             extra_data=extra_data,
             include_media=include_media,
             exclude_media=exclude_media,
         )
+        return len(targets)
     else:
         return notify_now(targets, notify_type, extra_data, include_media, exclude_media)
 
@@ -109,18 +115,21 @@ def notify_now(targets, notify_type, extra_data={}, include_media=None, exclude_
     else:
         include_media = [media for media in media_map if media not in exclude_media]
 
+    num_sent = 0 
     for media_name in include_media:
         media_settings = media_map[media_name]
 
         targets_to_send = filter(lambda t: get_notify_setting(t, notify_type, media_name), targets)
         if targets_to_send:
-            for backends in media_settings['backends']:
-                backend.send(targets_to_send, notify_type, media, extra_content)
+            for backend in media_settings['backends']:
+                num_sent += backend.send(targets_to_send, notify_type, media_name, extra_data)
+    return num_sent
+
 
 def get_notify_setting(target, notify_type, media_name):
     # TODO
     media_map = _get_media_map()
-    return notify_type in media_map['default_types']
+    return notify_type in media_map[media_name]['default_types']
 
 def set_notify_setting(target, notify_type, media_name, send):
     pass
