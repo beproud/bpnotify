@@ -4,6 +4,8 @@ import unittest
 import doctest
 import django
 
+BASE_PATH = os.path.dirname(__file__)
+
 def main():
     """
     Standalone django model test with a 'memory-only-django-installation'.
@@ -21,6 +23,9 @@ def main():
     global_settings.DATABASE_ENGINE = "sqlite3"
     global_settings.DATABASE_NAME = ":memory:"
     #global_settings.ROOT_URLCONF = 'notify.tests.urls'
+    global_settings.TEMPLATE_DIRS = (
+        os.path.join(BASE_PATH, 'beproud', 'django', 'notify', 'tests', 'templates'),
+    )
 
     global_settings.BPNOTIFY_MEDIA = {
         "news": {

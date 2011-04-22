@@ -36,6 +36,7 @@ class EmailBackend(BaseBackend):
     with the rendered content.
     """
     def send(self, targets, notify_type, media, extra_data={}):
+
         subject_template = 'notify/%s/%s/mail_subject.txt' % (notify_type, media)
         body_html_template = 'notify/%s/%s/mail_body.html' % (notify_type, media)
         body_text_template = 'notify/%s/%s/mail_body.txt' % (notify_type, media)
@@ -53,7 +54,7 @@ class EmailBackend(BaseBackend):
                         }
                         context.update(extra_data)
 
-                        subject = render_to_string(subject_template, context)
+                        subject = render_to_string(subject_template, context).replace(u"\r",u"").replace(u"\n",u"")
 
                         try:
                             body_html = render_to_string(body_html_template, context)
