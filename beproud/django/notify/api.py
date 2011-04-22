@@ -89,7 +89,7 @@ def notify(targets, notify_type, extra_data={}, include_media=None, exclude_medi
             targets = [targets]
 
         tasks.Notify.delay(
-            targets=[(ContentType.get_for_model(target).pk, target.pk) for target in targets],
+            targets=[(ContentType.objects.get_for_model(target).pk, target.pk) for target in targets],
             notify_type=notify_type,
             extra_data=extra_data,
             include_media=include_media,
