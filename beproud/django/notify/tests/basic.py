@@ -15,6 +15,21 @@ class BasicNotifyTest(TestBase, TestCase):
     
     def test_sending_model(self):
         user = User.objects.get(pk=2)
+        items_sent = notify(user, 'follow', extra_data={"followed": "eggs"})
+        self.assertEquals(items_sent, 1)
+
+        news = Notification.objects.filter(media='news')
+        self.assertEquals(len(news), 1)
+        self.assertEquals(news[0].media, 'news')
+        self.assertEquals(news[0].notify_type, 'follow')
+        self.assertEquals(news[0].target, user)
+        self.assertEquals(news[0].extra_data.get('followed'), 'eggs')
+        
+        private_messages = Notification.objects.exclude(media='news')
+        self.assertEquals(len(private_messages), 0)
+
+    def test_sending_model_types(self):
+        user = User.objects.get(pk=2)
         items_sent = notify(user, 'private_msg', extra_data={"spam": "eggs"})
         self.assertEquals(items_sent, 2)
 
