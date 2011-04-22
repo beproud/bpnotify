@@ -19,6 +19,9 @@ setup (
       'Programming Language :: Python',
       'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    packages=["notify"],
+    include_package_data=True,
+    packages=find_packages(),
+    namespace_packages=['beproud', 'beproud.django'],
     test_suite='tests.main',
+    zip_safe=False,
 )
