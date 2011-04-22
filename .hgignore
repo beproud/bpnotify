@@ -7,6 +7,11 @@ syntax: glob
 *.o
 *.pyc
 *.swp
+*.egg-info
+build
+dist
+pip-log.txt
+docs/*/build
 
 syntax: regexp
-.*\#.*\#$ 
+.*\#.*\#$

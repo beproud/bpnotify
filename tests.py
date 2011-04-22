@@ -16,12 +16,30 @@ def main():
     global_settings.INSTALLED_APPS = (
         'django.contrib.auth',
         'django.contrib.contenttypes',
-        'commons',
-        'notify',
+        'beproud.django.notify',
     )
     global_settings.DATABASE_ENGINE = "sqlite3"
     global_settings.DATABASE_NAME = ":memory:"
     #global_settings.ROOT_URLCONF = 'notify.tests.urls'
+
+    global_settings.BPNOTIFY_MEDIA = {
+        "news": {
+            "verbose_name": "News",
+            "default_types": ("new_user", "follow", "private_msg"),
+            "backends": (
+                "beproud.django.notify.backends.model.ModelBackend",
+            ),
+        },
+        "private_msg": {
+            "verbose_name": "Private Message",
+            "default_types": ("private_msg",),
+            "backends": (
+                "beproud.django.notify.backends.model.ModelBackend",
+                "beproud.django.notify.backends.mail.MailBackend",
+            ),
+        },
+    }
+    global_settings.BPNOTIFY_SETTINGS_STORAGE=''
 
     from django.test.utils import get_runner
     test_runner = get_runner(global_settings)
