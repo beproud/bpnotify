@@ -10,6 +10,8 @@ from beproud.django.notify.tests.base import TestBase
 
 from beproud.django.notify.api import *
 
+__all__ = ('MailNotifyTest',)
+
 class MailNotifyTest(TestBase, TestCase):
     fixtures = ['test_users.json']
     

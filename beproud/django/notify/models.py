@@ -12,7 +12,7 @@ from beproud.django.notify.api import _get_media_map
 
 __all__ = (
     'Notification',
-    'NoticeSetting',
+    'NotifySetting',
 )
 
 media_map = _get_media_map()
@@ -54,3 +54,6 @@ class NotifySetting(models.Model):
 
     def __unicode__(self):
         return "%s (%s, %s, %s)" % (self.target, self.notify_type, self.media, send and 'send' or 'no send')
+
+    class Meta:
+        unique_together = ('target_content_type', 'target_object_id', 'notify_type', 'media')

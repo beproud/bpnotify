@@ -9,6 +9,7 @@ from beproud.django.notify.tests.base import TestBase
 from beproud.django.notify.models import Notification
 from beproud.django.notify.api import *
 
+__all__ = ('BasicNotifyTest',)
 
 class BasicNotifyTest(TestBase, TestCase):
     fixtures = ['test_users.json']
@@ -33,8 +34,8 @@ class BasicNotifyTest(TestBase, TestCase):
         user = User.objects.get(pk=2)
         items_sent = notify(user, 'private_msg', extra_data={"spam": "eggs"})
         # 1 private_messages model
+        # 1 private_messages mail
         # 1 news model
-        # 1 news mail
         self.assertEquals(items_sent, 3)
 
         private_messages = Notification.objects.filter(media='private_messages')
@@ -56,8 +57,8 @@ class BasicNotifyTest(TestBase, TestCase):
         items_sent = notify(user, 'private_msg', extra_data={"spam": "eggs"})
 
         # 2 private_messages model
+        # 2 private_messages mail
         # 2 news model
-        # 2 news mail
         self.assertEquals(items_sent, 6)
 
         # User2
@@ -105,3 +106,17 @@ class BasicNotifyTest(TestBase, TestCase):
         self.assertEquals(news[0].notify_type, 'private_msg')
         self.assertEquals(news[0].target, user[1])
         self.assertEquals(news[0].extra_data.get('spam'), 'eggs')
+
+
+    def test_sending_with_settings(self):
+        user = [User.objects.get(pk=1), User.objects.get(pk=2)]
+
+        items_sent = notify(user, 'followed', extra_data={"spam": "eggs"})
+        self.assertEquals(items_sent, 0)
+
+        self.assertTrue(set_notify_setting(user[0], 'followed', 'news', True))
+        items_sent = notify(user, 'followed', extra_data={"spam": "eggs"})
+
+        # 1 news model
+        self.assertEquals(items_sent, 1)
+

@@ -125,11 +125,31 @@ def notify_now(targets, notify_type, extra_data={}, include_media=None, exclude_
                 num_sent += backend.send(targets_to_send, notify_type, media_name, extra_data)
     return num_sent
 
+def get_notify_setting(target, notify_type, media_name, default=None):
+    """
+    Gets whether to send notifications with the given notify type
+    to the given media. A default value can be provided.
+    
+    If no default value is provided, the default is True if the
+    notify type is in the default_types setting for the given media.
 
-def get_notify_setting(target, notify_type, media_name):
-    # TODO
+    If neither the notify_type or the media are recognized, then this
+    function will return False and no notifications are sent.
+    """
+    from beproud.django.notify.storage import storage
+
     media_map = _get_media_map()
-    return notify_type in media_map[media_name]['default_types']
+
+    if default is None:
+        default = notify_type in media_map.get(media_name, {}).get('default_types', [])
+
+    return storage.get(target, notify_type, media_name, default)
 
 def set_notify_setting(target, notify_type, media_name, send):
-    pass
+    """
+    Sets whether to send notifications with the given notify type
+    to the given media. The default storage backend is used
+    to store the settings.
+    """
+    from beproud.django.notify.storage import storage
+    return storage.set(target, notify_type, media_name, send)

@@ -44,7 +44,7 @@ def main():
             ),
         },
     }
-    global_settings.BPNOTIFY_SETTINGS_STORAGE=''
+    global_settings.BPNOTIFY_SETTINGS_STORAGE='beproud.django.notify.storage.model.ModelStorage'
 
     from django.test.utils import get_runner
     test_runner = get_runner(global_settings)

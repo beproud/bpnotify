@@ -2,10 +2,12 @@
 
 from django.conf import settings
 
+__all__ = ('TestBase',)
+
 AVAILABLE_SETTINGS = (
     'MIDDLEWARE_CLASSES',
     'BPNOTIFY_MEDIA',
-    'BPAUTH_SETTINGS_BACKEND',
+    'BPNOTIFY_SETTINGS_BACKEND',
 )
 
 class TestBase(object):
