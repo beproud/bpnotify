@@ -18,6 +18,13 @@ __all__ = (
 media_map = _get_media_map()
 MEDIA_CHOICES = [(name, data['verbose_name']) for name, data in media_map.iteritems()]
 
+class NotificationManager(models.Manager):
+    def get_for_target(self, target):
+        return self.filter(
+            target_content_type = ContentType.objects.get_for_model(target),
+            target_object_id = target.pk,
+        )
+
 class Notification(models.Model):
     target_content_type = models.ForeignKey(ContentType, verbose_name=_('content type id'), db_index=True)
     target_object_id = models.PositiveIntegerField(_('target id'), db_index=True)
@@ -30,6 +37,8 @@ class Notification(models.Model):
     extra_data = jsonfield.JSONField(_('extra data'), null=True, blank=True)
 
     ctime = models.DateTimeField(_('created'), auto_now_add=True, db_index=True)
+
+    objects = NotificationManager()
 
     @models.permalink
     def get_absolute_url(self):
