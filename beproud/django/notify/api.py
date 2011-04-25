@@ -70,8 +70,12 @@ def load_backend(backend_path):
     """
     Load the auth backend with the given name
     """
+    kwargs = {}
+    if isinstance(backend_path, (list, tuple)):
+        backend_path, kwargs = backend_path
+
     try:
-        return import_string(backend_path)()
+        return import_string(backend_path)(**kwargs)
     except (ImportError, AttributeError), e:
         raise ImproperlyConfigured('Error importing notify backend %s: "%s"' % (backend_path, e))
     except ValueError, e:
