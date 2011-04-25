@@ -10,7 +10,7 @@ class NotificationAdmin(admin.ModelAdmin):
     ordering = ('-ctime',)
 
 class NotifySettingAdmin(admin.ModelAdmin):
-    list_display = ('target_content_type','target_object_id','notice_type','media','send')
+    list_display = ('target','notice_type','media','send')
     list_filter = ('target_content_type','notice_type', 'media')
     ordering = ('target_content_type','target_object_id')
 
