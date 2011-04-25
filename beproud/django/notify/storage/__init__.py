@@ -19,9 +19,9 @@ def get_storage(storage_path, *args, **kwargs):
 
 def load_storage(storage_setting):
     if isinstance(storage_setting, (list, tuple)):
-        storage_path, args, kwargs = storage_setting
+        storage_path, kwargs = storage_setting
     else:
-        storage_path, args, kwargs = storage_setting, (), {}
-    return get_storage(storage_path, *args, **kwargs)
+        storage_path, kwargs = storage_setting, {}
+    return get_storage(storage_path, **kwargs)
 
 storage = load_storage(getattr(settings, 'BPAUTH_SETTINGS_STORAGE', DEFAULT_SETTINGS_STORAGE))
