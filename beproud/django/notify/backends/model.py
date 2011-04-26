@@ -1,7 +1,9 @@
 #:coding=utf-8:
 
-from beproud.django.notify.backends.base import BaseBackend
+from django.contrib.contenttypes.models import ContentType
 from django.db import DatabaseError
+
+from beproud.django.notify.backends.base import BaseBackend
 
 class ModelBackend(BaseBackend):
     """
@@ -26,3 +28,31 @@ class ModelBackend(BaseBackend):
             # there was some kind of Database error
             # TODO: logging
             return 0
+    
+    def get(self, target, media, start=None, end=None):
+        from beproud.django.notify.models import Notification
+
+        notifications = Notification.objects.filter(
+            target_content_type = ContentType.objects.get_for_model(target),
+            target_object_id = target.pk,
+            media = media, 
+        )
+        
+        if start is not None or end is not None:
+            if start is None:
+                notifications = notifications[:end]
+            elif end is None:
+                notifications = notifications[start:]
+            else:
+                notifications = notifications[start:end]
+
+        def _func(n):
+            return {
+                'target': n.target,
+                'notify_type': n.notify_type,
+                'media': n.media,
+                'extra_data': n.extra_data,
+                'ctime': n.ctime,
+            }
+
+        return map(_func, notifications)

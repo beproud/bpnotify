@@ -7,6 +7,7 @@ from django.utils.functional import memoize
 __all__ = (
     'notify',
     'notify_now',
+    'get_notifications',
     'get_notify_setting',
     'set_notify_setting',
 )
@@ -128,6 +129,35 @@ def notify_now(targets, notify_type, extra_data={}, include_media=None, exclude_
             for backend in media_settings['backends']:
                 num_sent += backend.send(targets_to_send, notify_type, media_name, extra_data)
     return num_sent
+
+def get_notifications(target, media_name, start=None, end=None):
+    """
+    Retrieves notifications from the first backend that supports
+    retrieving. Backends that raise a NotImplemented exception
+    will be ignored.
+
+    The list of notifications will be an iterable of dicts in the
+    following format:
+
+    {
+        'target': target,
+        'notify_type': notify_type,
+        'media': media,
+        'extra_data': {
+            'spam': 'eggs',
+        }
+        'ctime': datetime.datetime(...),
+    }
+    """
+    media_map = _get_media_map()
+    media_settings = media_map.get(media_name)
+    if media_settings:
+        for backend in media_settings['backends']:
+            try:
+                return backend.get(target, media_name, start, end)
+            except NotImplemented, e:
+                pass
+    return []
 
 def get_notify_setting(target, notify_type, media_name, default=None):
     """

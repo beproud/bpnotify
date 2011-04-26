@@ -25,3 +25,34 @@ class BaseBackend(object):
 
     def _send(self, target, notify_type, media, extra_data={}):
         raise NotImplemented('You must implement the _send() method in from the BaseBackend class.')
+
+    def get(self, target, media, start=None, end=None):
+        """
+        Retrieves notifications for the target from the
+        backend for the given media. The backend should
+        return notifications in the order they were sent
+        if possible.
+        
+        If given a start or end index the backend should return only
+        the notifications within the given range. If no start index
+        is given then the backend should return the first available
+        notification. If no end index is given then the backend
+        should return up to the last available notification.
+
+        The backend should return the notifications in the format
+        of an iterable of python dictionaries of the format described below:
+
+        notifications = [
+            {
+                'target': target,
+                'notify_type': notify_type,
+                'media': media,
+                'extra_data': {
+                    'spam': 'eggs',
+                }
+                'ctime': datetime.datetime(...),
+            },
+            ...
+        ]
+        """
+        raise NotImplemented('This backend does not support retrieving notifications.')

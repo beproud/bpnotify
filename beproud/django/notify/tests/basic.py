@@ -1,5 +1,7 @@
 #:coding=utf8:
 
+from datetime import datetime
+
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -120,3 +122,33 @@ class BasicNotifyTest(TestBase, TestCase):
         # 1 news model
         self.assertEquals(items_sent, 1)
 
+    def test_get_notifications(self):
+        user = [User.objects.get(pk=1), User.objects.get(pk=2)]
+        items_sent = notify(user, 'private_msg', extra_data={"spam": "eggs"})
+
+        # 2 private_messages model
+        # 2 private_messages mail
+        # 2 news model
+        self.assertEquals(items_sent, 6)
+
+        for index in [0, 1]:
+            news = get_notifications(user[index], 'news')
+            self.assertTrue(hasattr(news, '__iter__'), 'news notifications is not an iterable!')
+            self.assertEquals(len(news), 1)
+            self.assertTrue(isinstance(news[0], dict), 'news notification is not a dict!')
+            self.assertEquals(news[0].get('target'), user[index])
+            self.assertEquals(news[0].get('notify_type'), 'private_msg')
+            self.assertEquals(news[0].get('media'), 'news')
+            self.assertEquals(news[0].get('extra_data'), {'spam': 'eggs'})
+            self.assertTrue(isinstance(news[0].get('ctime'), datetime), 'news ctime is not a datetime!')
+
+
+            private_messages = get_notifications(user[index], 'private_messages')
+            self.assertTrue(hasattr(private_messages, '__iter__'), 'private_messages notifications is not an iterable!')
+            self.assertEquals(len(private_messages), 1)
+            self.assertTrue(isinstance(private_messages[0], dict), 'private_messages notification is not a dict!')
+            self.assertEquals(private_messages[0].get('target'), user[index])
+            self.assertEquals(private_messages[0].get('notify_type'), 'private_msg')
+            self.assertEquals(private_messages[0].get('media'), 'private_messages')
+            self.assertEquals(private_messages[0].get('extra_data'), {'spam': 'eggs'})
+            self.assertTrue(isinstance(news[0].get('ctime'), datetime), 'news ctime is not a datetime!')
