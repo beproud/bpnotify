@@ -6,9 +6,9 @@ from django.db import DatabaseError
 from beproud.django.notify.storage.base import BaseStorage
 from beproud.django.notify.models import NotifySetting
 
-__all__ = ('ModelStorage',)
+__all__ = ('DBStorage',)
 
-class ModelStorage(object):
+class DBStorage(object):
     """
     A notification settings backend for storing user
     settings in the database.
@@ -22,7 +22,7 @@ class ModelStorage(object):
                 target_object_id = target.pk,
                 notify_type = notify_type,
                 media = media_name,
-            )
+            ).send
         except NotifySetting.DoesNotExist, e:
             return default
 
