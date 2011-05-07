@@ -44,14 +44,15 @@ settings.
 Notification Settings
 +++++++++++++++++++++++++++++++
 
-A settings API is provided to allow user's to set whether they would like
-to recieve notifications of a specific type to a specific media. If a setting
-for a notify type and media is set to not deliver the notification, the
-notification will not be sent even if the :ref:`notify()` method is called.
+A settings API is provided to allow user's to set whether they would like to
+recieve notifications of a specific type to a specific media. If a setting for
+a notify type and media is set to not deliver the notification, the
+notification will not be sent even if the :func:`notify()
+<beproud.django.notify.api.notify>` function is called.
 
-The :ref:`notify()` method checks the settings for the user when sending
-notifications and will not send to user's who have turned their settings
-off.
+The :func:`notify() <beproud.django.notify.api.notify>` function checks the
+settings for the user when sending notifications and will not send to user's
+who have turned their settings off.
 
 Settings are stored using a storage backend. The storage backend supports a
 simple key/value like API which lends itself well to key/value storage and
@@ -72,9 +73,10 @@ can also be retrieved through the API by backends supporting retrieval.
 
 .. toctree::
   :numbered:
-  :maxdepth: 1
+  :maxdepth: 2
 
   install
+  sending_notifications
   settings
 
 Indices and tables

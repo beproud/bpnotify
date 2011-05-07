@@ -35,6 +35,8 @@
     The :attr:`settings.BPNOTIFY_MEDIA` setting supports three settings for
     each media.
 
+    .. _settings-media-default-types:
+
     **verbose_name**
 
     The verbose name of the media. This could be used for settings pages or
