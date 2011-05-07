@@ -1,5 +1,7 @@
 #:coding=utf-8:
 
+import logging
+
 from django.template import TemplateDoesNotExist
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -7,6 +9,8 @@ from django.core.mail import get_connection, EmailMessage, EmailMultiAlternative
 from django.conf import settings
 
 from beproud.django.notify.backends.base import BaseBackend
+
+logger = logging.getLogger('beproud.django.notify')
 
 class EmailBackend(BaseBackend):
     """
@@ -79,9 +83,7 @@ class EmailBackend(BaseBackend):
                             messages.append(EmailMessage(subject, body_text, to=[to_email]))
         except TemplateDoesNotExist, e:
             # Subject template does not exist.
-
-            # TODO: logging
-            pass
+            logger.warning('Subject template does not exist "%s"' % e)
 
         connection = get_connection(fail_silently=True)
         return connection.send_messages(messages)

@@ -1,5 +1,7 @@
 #:coding=utf8:
 
+import logging
+
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.encoding import force_unicode
 from django.utils.functional import memoize
@@ -11,6 +13,8 @@ __all__ = (
     'get_notify_setting',
     'set_notify_setting',
 )
+
+logger = logging.getLogger('beproud.django.notify')
 
 def import_string(import_name, silent=False):
     """Imports an object based on a string.  This is useful if you want to
@@ -156,7 +160,7 @@ def get_notifications(target, media_name, start=None, end=None):
             try:
                 return backend.get(target, media_name, start, end)
             except NotImplemented, e:
-                pass
+                logger.debug('''Backend "%s" doesn't support retrieval. skipping.''' % backend)
     return []
 
 def get_notify_setting(target, notify_type, media_name, default=None):
