@@ -38,10 +38,12 @@ class CachedDBStorage(DBStorage):
         return data
 
     def set(self, target, notify_type, media_name, send):
-        super(CachedDBStorage, self).set(
+        saved = super(CachedDBStorage, self).set(
             target,
             notify_type,
             media_name,
             send,
         )
-        cache.set(self.make_key(target, notify_type, media_name), send)
+        if saved:
+            cache.set(self.make_key(target, notify_type, media_name), send)
+        return saved
