@@ -63,7 +63,7 @@ class RedisBackend(BaseBackend):
                     'notify_type': n.get('notify_type'),
                     'media': media,
                     'extra_data': n.get('extra_data'),
-                    'ctime': parse_iso_string(n.get('ctime')),
+                    'ctime': utc_to_local(parse_iso_string(n.get('ctime'))),
                 }
             except (TypeError, ValueError), e:
                 # TODO: logging
