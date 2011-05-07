@@ -9,7 +9,7 @@ class BaseStorage(object):
     This is the base backend for user identification data storage.
 
     This is not a complete class; to be a usable storage backend, it must be
-    subclassed and the two methods ``_get`` and ``_store`` overridden.
+    subclassed and the two methods ``_get`` and ``_set`` overridden.
     """
 
     def __init__(self, *args, **kwargs):

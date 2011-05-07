@@ -132,12 +132,12 @@ def notify_now(targets, notify_type, extra_data={}, include_media=None, exclude_
 
 def get_notifications(target, media_name, start=None, end=None):
     """
-    Retrieves notifications from the first backend that supports
-    retrieving. Backends that raise a NotImplemented exception
-    will be ignored.
+    Retrieves notifications for the given media from the first
+    backend that supports retrieving. Backends that raise a
+    NotImplemented exception will be ignored.
 
-    The list of notifications will be an iterable of dicts in the
-    following format:
+    The list of notifications will be an iterable of dicts
+    in the following format:
 
     {
         'target': target,
