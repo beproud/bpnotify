@@ -58,3 +58,35 @@ to the :func:`notify() <beproud.django.notify.api.notify>` function.
 
     # Send to all media types except the "profile" and "notices" media types.
     notify(request.user, "welcome", exclude_media=["profile", "notices"])
+
+Retrieving Notifications
+-----------------------------------
+
+The notifications API supports retrieving notifications from backends that
+support retrieval. For this the :func:`get_notifications()
+<beproud.django.notify.api.get_notifications>` function is provided.
+
+.. function:: get_notifications(target, media, start=None, end=None)
+
+The ``get_notifications()`` method retrieves notifications sent to
+a specific target and media type and returns them as a python dictionary in
+the following format and in the reverse order they were sent (newest first):
+
+.. code-block:: python
+
+    >>> get_notifications(user, "private_messages")
+    [{
+        'target': User: monty,
+        'notify_type': "private_message",
+        'media': "private_messages",
+        'extra_data': {
+            'spam': 'eggs',
+        }
+        'ctime': datetime.datetime(2011, 5, 8, 14, 06, 52, 882674)
+    },
+    ...
+    ]
+
+The :func:`get_notifications() <beproud.django.notify.api.get_notifications>`
+function also supports specifying the start and end index of the notifications
+to be retrieved as the ``start`` and ``end`` arguments.
