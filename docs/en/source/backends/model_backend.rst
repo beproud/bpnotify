@@ -4,6 +4,8 @@ Model Backend
 
 .. module:: beproud.django.notify.backends.model
 
+.. class:: beproud.django.notify.backends.model.ModelBackend
+
 The model backend sends notifications by saving themy in the database
 using the :class:`Notification <beproud.django.notify.models.Notification>` model.
 
