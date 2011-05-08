@@ -40,12 +40,6 @@ class Notification(models.Model):
 
     objects = NotificationManager()
 
-    @models.permalink
-    def get_absolute_url(self):
-        return ('view_notification' (), {
-            'id': self.id,
-        })
-    
     def __unicode__(self):
         return "%s (%s, %s)" % (self.target, self.notify_type, self.media)
 
