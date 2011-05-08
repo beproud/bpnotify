@@ -77,7 +77,13 @@ can also be retrieved through the API by backends supporting retrieval.
 
   install
   sending_notifications
+  backends/index
   settings
+..  backends
+..  backends/email_backend
+..  backends/writing_backends
+..  storage/cached_db
+..  storage/writing_storage
 
 Indices and tables
 ==================
