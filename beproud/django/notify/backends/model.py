@@ -36,7 +36,7 @@ class ModelBackend(BaseBackend):
             target_content_type = ContentType.objects.get_for_model(target),
             target_object_id = target.pk,
             media = media, 
-        )
+        ).order_by('-ctime')
         
         if start is not None or end is not None:
             if start is None:
