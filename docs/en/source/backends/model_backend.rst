@@ -7,6 +7,10 @@ Model Backend
 The model backend sends notifications by saving themy in the database
 using the :class:`Notification <beproud.django.notify.models.Notification>` model.
 
+The model backend supports retrieving notifications via the
+:func:`get_notifications() <beproud.django.notify.api.get_notifications>`
+function.
+
 Notification Model Reference
 ------------------------------------
 
