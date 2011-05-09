@@ -15,5 +15,5 @@ of implementation that is suited to your application.
   :maxdepth: 2
 
   model_backend
-..    mail_backend
+  mail_backend
 ..    writing_backends
