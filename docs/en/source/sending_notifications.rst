@@ -6,14 +6,24 @@ Sending Notifications
 
 
 Sending notifications is fairly straitforward. Notifications are sent via the
-``notify()`` function. Though there are some variations on how to call this
-function, the functionality does not change a great deal.
+:func:`notify() <beproud.django.notify.api.notify>` function. Though there are
+some variations on how to call this function, the functionality does not change
+a great deal.
 
 .. function:: notify(targets, notify_type, extra_data={}, include_media=None, exclude_media=[])
 
-The notify method is called to send a notification of the given type to a iterable
-of targets. If the targets option is not iterable then it is treated as a single
-target.
+The notify method is called to send a notification of the given type to a
+iterable of targets. If the targets option is not iterable then it is treated
+as a single target. The notification will be send asynchronously using the
+Celery task queue API if ``djcelery`` is installed. Otherwise the notification
+is sent synchronously using the :func:`notify_now()
+<beproud.django.notify.api.notify_now>` function.
+
+.. function:: notify_now(targets, notify_type, extra_data={}, include_media=None, exclude_media=[])
+
+If you wish to bypass sending notifications asynchronously then you can call
+the :func:`notify_now() <beproud.django.notify.api.notify_now>` function
+directly.
 
 Sending a Simple Notification
 -----------------------------------
@@ -64,13 +74,17 @@ Retrieving Notifications
 
 The notifications API supports retrieving notifications from backends that
 support retrieval. For this the :func:`get_notifications()
-<beproud.django.notify.api.get_notifications>` function is provided.
+<beproud.django.notify.api.get_notifications>` function is provided.  The
+:func:`get_notifications() <beproud.django.notify.api.get_notifications>`
+function retrieves notifications from the first backend that supports retrieval
+for the given media type.
 
 .. function:: get_notifications(target, media, start=None, end=None)
 
-The ``get_notifications()`` method retrieves notifications sent to
-a specific target and media type and returns them as a python dictionary in
-the following format and in the reverse order they were sent (newest first):
+The :func:`get_notifications() <beproud.django.notify.api.get_notifications>`
+method retrieves notifications sent to a specific target and media type and
+returns them as a python dictionary in the following format and in the reverse
+order they were sent (newest first):
 
 .. code-block:: python
 
@@ -90,3 +104,31 @@ the following format and in the reverse order they were sent (newest first):
 The :func:`get_notifications() <beproud.django.notify.api.get_notifications>`
 function also supports specifying the start and end index of the notifications
 to be retrieved as the ``start`` and ``end`` arguments.
+
+Getting and Updating Notification Settings
+-------------------------------------------------
+
+The setting of whether to send or not send a particular notification can be
+retrieved using the :func:`get_notify_setting()
+<beproud.django.notify.api.get_notify_setting>` function. Each setting is
+unique for the target, notify type, and media type. If no setting has been set
+yet then the given default value is returned. If not default value is specified
+then the function returns None.
+
+.. function:: get_notify_setting(target, notify_type, media_name, default=None)
+
+:func:`get_notify_setting() <beproud.django.notify.api.get_notify_setting>` 
+returns a boolean indicating if notifications to the given target with
+the given notify type routed to the given media will be sent.
+
+Settings can be updated by using the :func:`set_notify_setting()
+<beproud.django.notify.api.set_notify_setting>` function. The send argument is
+a boolean. If True then notifications sent to the target with the given
+notify type that are routed to the given media will be sent. If False
+notifications are not sent.
+
+.. function:: set_notify_setting(target, notify_type, media_name, send)
+
+Setting are stored and retrieved using the settings storage backend specified
+in the application's ``settings.py`` in the
+:attr:`settings.BPNOTIFY_SETTINGS_BACKEND` setting.
