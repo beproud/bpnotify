@@ -78,6 +78,7 @@ can also be retrieved through the API by backends supporting retrieval.
   install
   sending_notifications
   backends/index
+  storage/index
   settings
 ..  backends
 ..  backends/email_backend
