@@ -27,3 +27,15 @@ class MailNotifyTest(TestBase, TestCase):
         self.assertEquals(len(mail.outbox), 1)
         self.assertEquals(mail.outbox[0].subject, u'テストメール private_msg private_messages eggs')
         self.assertEquals(mail.outbox[0].body, u'Text メールボディ private_msg private_messages eggs\n')
+
+    def test_from_email(self):
+        user = User.objects.get(pk=2)
+        items_sent = notify(user, 'private_msg', extra_data={"spam": "eggs", "from_email": "spameggs@example.com"})
+        self.assertEquals(len(mail.outbox), 1)
+        self.assertEquals(mail.outbox[0].from_email, "spameggs@example.com")
+
+    def test_from_mail(self):
+        user = User.objects.get(pk=2)
+        items_sent = notify(user, 'private_msg', extra_data={"spam": "eggs", "from_mail": "spameggs@example.com"})
+        self.assertEquals(len(mail.outbox), 1)
+        self.assertEquals(mail.outbox[0].from_email, "spameggs@example.com")

@@ -50,6 +50,7 @@ class EmailBackend(BaseBackend):
         try:
             for target in targets:
                 to_email = getattr(target, 'email', getattr(target, 'mail', extra_data.get('email', extra_data.get('mail'))))
+                from_email = extra_data.get('from_email', extra_data.get('from_mail', settings.DEFAULT_FROM_EMAIL))
                 if to_email:
                         context = {
                             'target': target,
@@ -75,12 +76,12 @@ class EmailBackend(BaseBackend):
 
                         if body_text and body_html:
                             # HTML mail
-                            message = EmailMultiAlternatives(subject, body_text, to=[to_email])
+                            message = EmailMultiAlternatives(subject, body_text, to=[to_email], from_email=from_email)
                             message.attach_alternative(body_html, "text/html")
                             messages.append(message)
                         elif body_text:
                             # Normal Text Mail
-                            messages.append(EmailMessage(subject, body_text, to=[to_email]))
+                            messages.append(EmailMessage(subject, body_text, to=[to_email], from_email=from_email))
         except TemplateDoesNotExist, e:
             # Subject template does not exist.
             logger.warning('Subject template does not exist "%s"' % e)
