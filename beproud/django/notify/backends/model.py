@@ -48,6 +48,7 @@ class ModelBackend(BaseBackend):
 
         def _func(n):
             return {
+                'id': 'Notification:%s' % n.id,
                 'target': n.target,
                 'notify_type': n.notify_type,
                 'media': n.media,

@@ -144,6 +144,7 @@ def get_notifications(target, media_name, start=None, end=None):
     in the following format:
 
     {
+        'id': unique_id,
         'target': target,
         'notify_type': notify_type,
         'media': media,

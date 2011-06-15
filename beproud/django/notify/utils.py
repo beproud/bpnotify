@@ -11,9 +11,9 @@ def utc_to_local(utc_datetime):
     UTC datetime/date obj => local datetime/date obj
     """
     if isinstance(utc_datetime, datetime):
-        return datetime(*time.localtime(calendar.timegm(utc_date.timetuple()))[:6])
-    elif isinstance(local_datetime, date):
-        return date(*time.localtime(calendar.timegm(utc_date.timetuple()))[:6])
+        return datetime(*time.localtime(calendar.timegm(utc_datetime.timetuple()))[:6])
+    elif isinstance(utc_datetime, date):
+        return date(*time.localtime(calendar.timegm(utc_datetime.timetuple()))[:6])
     else:
         raise ValueError('Unknown datetime type!') 
 

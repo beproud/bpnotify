@@ -4,12 +4,15 @@ from datetime import datetime
 
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
-from django.conf import settings
 from django.test import TestCase
 
 from beproud.django.notify.tests.base import TestBase
 from beproud.django.notify.models import Notification
-from beproud.django.notify.api import *
+from beproud.django.notify.api import (
+    notify,
+    set_notify_setting,
+    get_notifications,
+)
 
 __all__ = ('BasicNotifyTest',)
 
@@ -136,6 +139,7 @@ class BasicNotifyTest(TestBase, TestCase):
             self.assertTrue(hasattr(news, '__iter__'), 'news notifications is not an iterable!')
             self.assertEquals(len(news), 1)
             self.assertTrue(isinstance(news[0], dict), 'news notification is not a dict!')
+            self.assertTrue(news[0].get('id', False), 'news notification has no id')
             self.assertEquals(news[0].get('target'), user[index])
             self.assertEquals(news[0].get('notify_type'), 'private_msg')
             self.assertEquals(news[0].get('media'), 'news')
@@ -147,6 +151,7 @@ class BasicNotifyTest(TestBase, TestCase):
             self.assertTrue(hasattr(private_messages, '__iter__'), 'private_messages notifications is not an iterable!')
             self.assertEquals(len(private_messages), 1)
             self.assertTrue(isinstance(private_messages[0], dict), 'private_messages notification is not a dict!')
+            self.assertTrue(private_messages[0].get('id', False), 'private_messages notification has no id')
             self.assertEquals(private_messages[0].get('target'), user[index])
             self.assertEquals(private_messages[0].get('notify_type'), 'private_msg')
             self.assertEquals(private_messages[0].get('media'), 'private_messages')
