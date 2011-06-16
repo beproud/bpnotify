@@ -26,8 +26,8 @@ class NotificationManager(models.Manager):
         )
 
 class Notification(models.Model):
-    target_content_type = models.ForeignKey(ContentType, verbose_name=_('content type id'), db_index=True)
-    target_object_id = models.PositiveIntegerField(_('target id'), db_index=True)
+    target_content_type = models.ForeignKey(ContentType, verbose_name=_('content type id'), db_index=True, null=True, blank=True)
+    target_object_id = models.PositiveIntegerField(_('target id'), db_index=True, null=True, blank=True)
     target = generic.GenericForeignKey('target_content_type', 'target_object_id')
 
 

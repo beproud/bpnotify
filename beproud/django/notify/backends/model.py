@@ -32,11 +32,17 @@ class ModelBackend(BaseBackend):
     def get(self, target, media, start=None, end=None):
         from beproud.django.notify.models import Notification
 
-        notifications = Notification.objects.filter(
-            target_content_type = ContentType.objects.get_for_model(target),
-            target_object_id = target.pk,
-            media = media, 
-        ).order_by('-ctime')
+        filter_kwargs = {
+            'media': media, 
+        }
+        if target is None:
+            filter_kwargs['target_content_type__isnull'] = True
+            filter_kwargs['target_object_id__isnull'] = True
+        else:
+            filter_kwargs['target_content_type'] = ContentType.objects.get_for_model(target)
+            filter_kwargs['target_object_id'] = target.pk
+
+        notifications = Notification.objects.filter(**filter_kwargs).order_by('-ctime')
         
         if start is not None or end is not None:
             if start is None:

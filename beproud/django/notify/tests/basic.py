@@ -11,6 +11,7 @@ from beproud.django.notify.models import Notification
 from beproud.django.notify.api import (
     notify,
     set_notify_setting,
+    get_notify_setting,
     get_notifications,
     NotifyObjectList,
 )
@@ -31,6 +32,21 @@ class BasicNotifyTest(TestBase, TestCase):
         self.assertEquals(news[0].media, 'news')
         self.assertEquals(news[0].notify_type, 'follow')
         self.assertEquals(news[0].target, user)
+        self.assertEquals(news[0].extra_data.get('followed'), 'eggs')
+        
+        private_messages = Notification.objects.exclude(media='news')
+        self.assertEquals(len(private_messages), 0)
+
+    def test_sending_model_null(self):
+        items_sent = notify(None, 'follow', extra_data={"followed": "eggs"})
+        # 1 news model
+        self.assertEquals(items_sent, 1)
+
+        news = Notification.objects.filter(media='news')
+        self.assertEquals(len(news), 1)
+        self.assertEquals(news[0].media, 'news')
+        self.assertEquals(news[0].notify_type, 'follow')
+        self.assertEquals(news[0].target, None)
         self.assertEquals(news[0].extra_data.get('followed'), 'eggs')
         
         private_messages = Notification.objects.exclude(media='news')
@@ -58,16 +74,38 @@ class BasicNotifyTest(TestBase, TestCase):
         self.assertEquals(news[0].target, user)
         self.assertEquals(news[0].extra_data.get('spam'), 'eggs')
 
+    def test_sending_model_types_null(self):
+        items_sent = notify(None, 'private_msg', extra_data={"spam": "eggs"})
+        # 1 private_messages model
+        # 0 private_messages mail (No mail to null target)
+        # 1 news model
+        self.assertEquals(items_sent, 2)
+
+        private_messages = Notification.objects.filter(media='private_messages')
+        self.assertEquals(len(private_messages), 1)
+        self.assertEquals(private_messages[0].media, 'private_messages')
+        self.assertEquals(private_messages[0].notify_type, 'private_msg')
+        self.assertEquals(private_messages[0].target, None)
+        self.assertEquals(private_messages[0].extra_data.get('spam'), 'eggs')
+
+        news = Notification.objects.filter(media='news')
+        self.assertEquals(len(news), 1)
+        self.assertEquals(news[0].media, 'news')
+        self.assertEquals(news[0].notify_type, 'private_msg')
+        self.assertEquals(news[0].target, None)
+        self.assertEquals(news[0].extra_data.get('spam'), 'eggs')
+
+
     def test_sending_model_multi(self):
-        user = [User.objects.get(pk=1), User.objects.get(pk=2)]
+        user = [User.objects.get(pk=1), User.objects.get(pk=2), None]
         items_sent = notify(user, 'private_msg', extra_data={"spam": "eggs"})
 
-        # 2 private_messages model
-        # 2 private_messages mail
-        # 2 news model
-        self.assertEquals(items_sent, 6)
+        # 3 private_messages model
+        # 2 private_messages mail (No mail to null target)
+        # 3 news model
+        self.assertEquals(items_sent, 8)
 
-        # User2
+        # User1
         private_messages = Notification.objects.filter(
             media='private_messages',
             target_content_type=ContentType.objects.get_for_model(user[0]),
@@ -113,6 +151,28 @@ class BasicNotifyTest(TestBase, TestCase):
         self.assertEquals(news[0].target, user[1])
         self.assertEquals(news[0].extra_data.get('spam'), 'eggs')
 
+        # Null Target
+        private_messages = Notification.objects.filter(
+            media='private_messages',
+            target_content_type__isnull=True,
+            target_object_id__isnull=True,
+        )
+        self.assertEquals(len(private_messages), 1)
+        self.assertEquals(private_messages[0].media, 'private_messages')
+        self.assertEquals(private_messages[0].notify_type, 'private_msg')
+        self.assertEquals(private_messages[0].target, None)
+        self.assertEquals(private_messages[0].extra_data.get('spam'), 'eggs')
+
+        news = Notification.objects.filter(
+            media='news',
+            target_content_type__isnull=True,
+            target_object_id__isnull=True,
+        )
+        self.assertEquals(len(news), 1)
+        self.assertEquals(news[0].media, 'news')
+        self.assertEquals(news[0].notify_type, 'private_msg')
+        self.assertEquals(news[0].target, None)
+        self.assertEquals(news[0].extra_data.get('spam'), 'eggs')
 
     def test_sending_with_settings(self):
         user = [User.objects.get(pk=1), User.objects.get(pk=2)]
@@ -125,6 +185,15 @@ class BasicNotifyTest(TestBase, TestCase):
 
         # 1 news model
         self.assertEquals(items_sent, 1)
+
+    def test_settings_null(self):
+        self.assertFalse(set_notify_setting(None, 'followed', 'news', True))
+
+        # get_notify_setting for null target always returns the default
+        self.assertTrue(get_notify_setting(None, 'followed', 'news', True))
+        self.assertFalse(get_notify_setting(None, 'followed', 'news'))
+        self.assertFalse(get_notify_setting(None, 'follow', 'news', False))
+        self.assertTrue(get_notify_setting(None, 'follow', 'news'))
 
     def test_get_notifications(self):
         user = [User.objects.get(pk=1), User.objects.get(pk=2)]

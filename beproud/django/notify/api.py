@@ -273,6 +273,10 @@ def get_notify_setting(target, notify_type, media_name, default=None):
     if default is None:
         default = notify_type in media_map.get(media_name, {}).get('default_types', [])
 
+    # Special case for the null target
+    if target is None:
+        return default
+
     return storage.get(target, notify_type, media_name, default)
 
 def set_notify_setting(target, notify_type, media_name, send):
@@ -281,5 +285,10 @@ def set_notify_setting(target, notify_type, media_name, send):
     to the given media. The default storage backend is used
     to store the settings.
     """
+
+    # Special case for the null target
+    if target is None:
+        return False
+
     from beproud.django.notify.storage import storage
     return storage.set(target, notify_type, media_name, send)

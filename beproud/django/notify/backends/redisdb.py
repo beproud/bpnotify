@@ -28,8 +28,8 @@ class RedisBackend(BaseBackend):
     def __init__(self, key_func=None, max_items=None, **kwargs):
         if key_func is None:
             key_func = lambda target, media: 'bpnotify|%s:%s:%s' % (
-                ContentType.objects.get_for_model(target).pk,
-                target.pk,
+                ContentType.objects.get_for_model(target).pk if target else 'none',
+                target.pk if target else 'none',
                 media,
             )
         self.key_func = key_func
