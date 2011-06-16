@@ -10,8 +10,10 @@ __all__ = (
     'notify',
     'notify_now',
     'get_notifications',
+    'get_notification_count',
     'get_notify_setting',
     'set_notify_setting',
+    'NotifyObjectList',
 )
 
 logger = logging.getLogger('beproud.django.notify')
@@ -134,6 +136,77 @@ def notify_now(targets, notify_type, extra_data={}, include_media=None, exclude_
                 num_sent += backend.send(targets_to_send, notify_type, media_name, extra_data)
     return num_sent
 
+# The maximum number of items to display in a NotifyObjectList.__repr__
+REPR_OUTPUT_SIZE = 20
+
+class NotifyObjectList(object):
+    """
+    An object list that retrieves notifications.
+    Allows for paginating notifications.
+    """
+    def __init__(self, target, media):
+        self.target = target
+        self.media = media
+
+    def __getitem__(self, key):
+        if not isinstance(key, (slice, int, long)):
+            raise TypeError
+        if isinstance(key, slice):
+            notices = get_notifications(
+                target = self.target,
+                media_name = self.media,
+                start = key.start,
+                end = key.stop,
+            )
+            return key.step and list()[::key.step] or notices
+        else:
+            notices = get_notifications(
+                target = self.target,
+                media_name = self.media,
+                start = key,
+                end = key,
+            )
+            if notices:
+                return notices
+            else:
+                raise IndexError("list index out of range")
+
+    def __iter__(self):
+        return self.iterator()
+
+    def iterator(self):
+        index = 0 
+        try:
+            notice = get_notifications(
+                target = self.target,
+                media_name = self.media,
+                start = index,
+                end = index+1,
+            )
+            while notice:
+                yield notice[0]
+                index += 1
+                notice = get_notifications(
+                    target = self.target,
+                    media_name = self.media,
+                    start = index,
+                    end = index+1,
+                )
+        except KeyError:
+            pass 
+
+    def __len__(self): 
+        return get_notification_count(
+            target = self.target,
+            media_name = self.media,
+        )
+    
+    def __repr__(self):
+        data = list(self[:REPR_OUTPUT_SIZE + 1])
+        if len(data) > REPR_OUTPUT_SIZE:
+            data[-1] = "...(remaining elements truncated)..."
+        return repr(data)
+
 def get_notifications(target, media_name, start=None, end=None):
     """
     Retrieves notifications for the given media from the first
@@ -163,6 +236,24 @@ def get_notifications(target, media_name, start=None, end=None):
             except NotImplemented, e:
                 logger.debug('''Backend "%s" doesn't support retrieval. skipping.''' % backend)
     return []
+
+def get_notification_count(target, media_name):
+    """
+    Retrieves the number of notifications for the given media from the first
+    backend that supports retrieving counts. Backends that raise a
+    NotImplemented exception will be ignored.
+
+    If no backend supports retrieving counts then 0 is returned.
+    """
+    media_map = _get_media_map()
+    media_settings = media_map.get(media_name)
+    if media_settings:
+        for backend in media_settings['backends']:
+            try:
+                return backend.count(target, media_name)
+            except NotImplemented, e:
+                logger.debug('''Backend "%s" doesn't support counts. skipping.''' % backend)
+    return 0
 
 def get_notify_setting(target, notify_type, media_name, default=None):
     """

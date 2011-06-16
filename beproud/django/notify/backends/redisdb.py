@@ -81,3 +81,7 @@ class RedisBackend(BaseBackend):
         
         # Map the notifications to the right format.
         return map(_func, notifications)
+
+    def count(self, target, media):
+        key = self.key_func(target, media)
+        return self.redis.llen(key)

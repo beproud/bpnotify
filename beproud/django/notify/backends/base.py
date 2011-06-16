@@ -56,3 +56,11 @@ class BaseBackend(object):
         ]
         """
         raise NotImplemented('This backend does not support retrieving notifications.')
+
+    def count(self, target, media):
+        """
+        Retrieves then number of notifications for the target from the backend
+        for the given media. The backend should return notifications in the
+        order they were sent if possible.
+        """
+        raise NotImplemented('This backend does not support retrieving counts.')

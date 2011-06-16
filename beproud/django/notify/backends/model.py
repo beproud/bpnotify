@@ -57,3 +57,11 @@ class ModelBackend(BaseBackend):
             }
 
         return map(_func, notifications)
+
+    def count(self, target, media):
+        from beproud.django.notify.models import Notification
+        return Notification.objects.filter(
+            target_content_type = ContentType.objects.get_for_model(target),
+            target_object_id = target.pk,
+            media = media, 
+        ).count()

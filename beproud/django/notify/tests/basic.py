@@ -12,6 +12,7 @@ from beproud.django.notify.api import (
     notify,
     set_notify_setting,
     get_notifications,
+    NotifyObjectList,
 )
 
 __all__ = ('BasicNotifyTest',)
@@ -157,3 +158,40 @@ class BasicNotifyTest(TestBase, TestCase):
             self.assertEquals(private_messages[0].get('media'), 'private_messages')
             self.assertEquals(private_messages[0].get('extra_data'), {'spam': 'eggs'})
             self.assertTrue(isinstance(news[0].get('ctime'), datetime), 'news ctime is not a datetime!')
+
+    def test_object_list(self):
+        user = User.objects.get(pk=2)
+        for i in range(15):
+            notify(user, 'follow', extra_data={"followed": "eggs"})
+        
+        object_list = NotifyObjectList(user, 'news')
+        self.assertEqual(len(object_list), 15)
+        
+        count = 0
+        for notice in object_list:
+            count += 1
+            self.assertTrue('id' in notice)
+            self.assertEqual(notice['media'], 'news')
+            self.assertEqual(notice['notify_type'], 'follow')
+        self.assertEqual(count, 15)
+        
+        self.assertEqual(len(object_list[:5]), 5)
+        self.assertEqual(len(object_list[1:]), 14)
+        self.assertEqual(len(object_list[1:3]), 2)
+        self.assertEqual(len(list(object_list)), 15)
+
+    def test_object_list_failures(self):
+        user = User.objects.get(pk=2)
+        object_list = NotifyObjectList(user, 'news')
+    
+        self.assertEqual(len(object_list), 0)
+
+        try:
+            object_list[10]
+            self.fail("Expected IndexError")
+        except IndexError, e:
+            pass
+
+        self.assertEqual(object_list[10:11], [])
+        self.assertEqual(object_list[:11], [])
+        self.assertEqual(object_list[2:], [])
