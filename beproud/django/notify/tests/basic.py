@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 
 from beproud.django.notify.tests.base import TestBase
-from beproud.django.notify.models import Notification
+from beproud.django.notify.models import Notification, NotifySetting
 from beproud.django.notify.api import (
     notify,
     set_notify_setting,
@@ -16,7 +16,10 @@ from beproud.django.notify.api import (
     NotifyObjectList,
 )
 
-__all__ = ('BasicNotifyTest',)
+__all__ = (
+    'BasicNotifyTest',
+    'ModelUnicodeTest',
+)
 
 class BasicNotifyTest(TestBase, TestCase):
     fixtures = ['test_users.json']
@@ -264,3 +267,20 @@ class BasicNotifyTest(TestBase, TestCase):
         self.assertEqual(object_list[10:11], [])
         self.assertEqual(object_list[:11], [])
         self.assertEqual(object_list[2:], [])
+
+class ModelUnicodeTest(TestCase):
+    def test_notification_unicode(self):
+        notice = Notification()
+        self.assertEquals(str(notice), "None (, )")
+        notice.notify_type = u"テスト"
+        notice.media = "yyy"
+        self.assertEquals(str(notice), u"None (テスト, yyy)".encode("utf-8"))
+
+    def test_notification_setting_unicode(self):
+        setting = NotifySetting()
+        self.assertEquals(str(setting), "None (, , no send)")
+
+        setting.notify_type = u"テスト"
+        setting.media = "yyy"
+        setting.send = True
+        self.assertEquals(str(setting), u"None (テスト, yyy, send)".encode("utf-8"))

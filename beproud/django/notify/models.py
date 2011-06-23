@@ -4,7 +4,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
-from django.conf import settings
 
 import jsonfield
 
@@ -41,7 +40,7 @@ class Notification(models.Model):
     objects = NotificationManager()
 
     def __unicode__(self):
-        return "%s (%s, %s)" % (self.target, self.notify_type, self.media)
+        return u"%s (%s, %s)" % (self.target, self.notify_type, self.media)
 
     class Meta:
         ordering=('-ctime',)
@@ -49,14 +48,14 @@ class Notification(models.Model):
 class NotifySetting(models.Model):
     target_content_type = models.ForeignKey(ContentType, verbose_name=_('content type id'))
     target_object_id = models.PositiveIntegerField(_('target id'))
-    target = generic.GenericForeignKey('content_type', 'object_id')
+    target = generic.GenericForeignKey('target_content_type', 'target_object_id')
 
     notify_type = models.CharField(_('notify type'), max_length=30, db_index=True)
     media = models.CharField(_('media'), max_length=30, choices=MEDIA_CHOICES, db_index=True)
     send = models.BooleanField(_('send?'))
 
     def __unicode__(self):
-        return "%s (%s, %s, %s)" % (self.target, self.notify_type, self.media, send and 'send' or 'no send')
+        return u"%s (%s, %s, %s)" % (self.target, self.notify_type, self.media, self.send and 'send' or 'no send')
 
     class Meta:
         unique_together = ('target_content_type', 'target_object_id', 'notify_type', 'media')
