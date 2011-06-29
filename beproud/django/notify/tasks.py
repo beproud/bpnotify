@@ -14,10 +14,10 @@ try:
 
     class Notify(Task):
 
-        def run(self, targets, notice_type, extra_data={}, include_media=None, exclude_media=[], **kwargs):
+        def run(self, targets, notify_type, extra_data={}, include_media=None, exclude_media=[], **kwargs):
             return notify_now(
                 targets,
-                notice_type,
+                notify_type,
                 extra_data=extra_data,
                 include_media=include_media,
                 exclude_media=exclude_media,
