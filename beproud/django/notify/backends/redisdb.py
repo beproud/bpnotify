@@ -5,7 +5,6 @@ from datetime import datetime
 
 from django.contrib.sites.models import Site
 from django.core.exceptions import ImproperlyConfigured
-from django.contrib.contenttypes.models import ContentType
 from django.utils import simplejson as json
 
 from beproud.django.notify.backends.base import BaseBackend
@@ -15,6 +14,18 @@ try:
     from redis import Redis, RedisError
 except ImportError:
     raise ImproperlyConfigured('You must install the redis python client in order to use the redis backend')
+
+def _key_func(target, media):
+    """
+    Default key function that accepts targets as
+    Django models or None
+    """
+    from django.contrib.contenttypes.models import ContentType
+    return 'bpnotify|%s:%s:%s' % (
+        ContentType.objects.get_for_model(target).pk if target is not None else 'none',
+        target.pk if target is not None else 'none',
+        media,
+    )
 
 class RedisBackend(BaseBackend):
     """
@@ -27,11 +38,7 @@ class RedisBackend(BaseBackend):
 
     def __init__(self, key_func=None, max_items=None, **kwargs):
         if key_func is None:
-            key_func = lambda target, media: 'bpnotify|%s:%s:%s' % (
-                ContentType.objects.get_for_model(target).pk if target else 'none',
-                target.pk if target else 'none',
-                media,
-            )
+            key_func = _key_func
         self.key_func = key_func
         self.max_items = max_items
         self.redis = Redis(**kwargs)

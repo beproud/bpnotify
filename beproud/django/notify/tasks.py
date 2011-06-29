@@ -14,9 +14,9 @@ try:
 
     class Notify(Task):
 
-        def run(self, users, notice_type, extra_data={}, include_media=None, exclude_media=[], **kwargs):
+        def run(self, targets, notice_type, extra_data={}, include_media=None, exclude_media=[], **kwargs):
             return notify_now(
-                users,
+                targets,
                 notice_type,
                 extra_data=extra_data,
                 include_media=include_media,

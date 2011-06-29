@@ -93,14 +93,13 @@ def notify(targets, notify_type, extra_data={}, include_media=None, exclude_medi
     from django.conf import settings
 
     if 'djcelery' in settings.INSTALLED_APPS:
-        from django.contrib.contenttypes.models import ContentType
         from beproud.django.notify import tasks
 
         if not hasattr(targets, '__iter__'):
             targets = [targets]
 
         tasks.Notify.delay(
-            targets=[(ContentType.objects.get_for_model(target).pk, target.pk) for target in targets],
+            targets=targets,
             notify_type=notify_type,
             extra_data=extra_data,
             include_media=include_media,

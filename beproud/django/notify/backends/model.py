@@ -8,7 +8,8 @@ from beproud.django.notify.backends.base import BaseBackend
 class ModelBackend(BaseBackend):
     """
     A basic backend that saves to the default
-    Notification model. Extra data must be JSON serializable.
+    Notification model. Targets must be Django model objects or None.
+    Extra data must be JSON serializable.
     """
     def _send(self, target, notify_type, media, extra_data={}):
         from beproud.django.notify.models import Notification
