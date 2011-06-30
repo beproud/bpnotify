@@ -50,8 +50,8 @@ class NotifySetting(models.Model):
     target_object_id = models.PositiveIntegerField(_('target id'))
     target = generic.GenericForeignKey('target_content_type', 'target_object_id')
 
-    notify_type = models.CharField(_('notify type'), max_length=30, db_index=True)
-    media = models.CharField(_('media'), max_length=30, choices=MEDIA_CHOICES, db_index=True)
+    notify_type = models.CharField(_('notify type'), max_length=100, db_index=True)
+    media = models.CharField(_('media'), max_length=100, choices=MEDIA_CHOICES, db_index=True)
     send = models.BooleanField(_('send?'))
 
     def __unicode__(self):
