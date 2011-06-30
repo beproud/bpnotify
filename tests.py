@@ -37,7 +37,7 @@ def main():
         },
         "private_messages": {
             "verbose_name": "Private Message",
-            "default_types": ("private_msg",),
+            "default_types": ("private_msg","notify_type_with_length_over_thirty"),
             "backends": (
                 "beproud.django.notify.backends.model.ModelBackend",
                 "beproud.django.notify.backends.mail.EmailBackend",

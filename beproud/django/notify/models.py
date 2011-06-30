@@ -30,8 +30,8 @@ class Notification(models.Model):
     target = generic.GenericForeignKey('target_content_type', 'target_object_id')
 
 
-    notify_type = models.CharField(_('notify type'), max_length=30, db_index=True)
-    media = models.CharField(_('media'), max_length=30, choices=MEDIA_CHOICES, db_index=True)
+    notify_type = models.CharField(_('notify type'), max_length=100, db_index=True)
+    media = models.CharField(_('media'), max_length=100, choices=MEDIA_CHOICES, db_index=True)
 
     extra_data = jsonfield.JSONField(_('extra data'), null=True, blank=True)
 

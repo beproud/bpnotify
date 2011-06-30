@@ -268,6 +268,18 @@ class BasicNotifyTest(TestBase, TestCase):
         self.assertEqual(object_list[:11], [])
         self.assertEqual(object_list[2:], [])
 
+    def test_notify_type_length(self):
+        # Test notify_types with length over 30
+        user = User.objects.get(pk=2)
+        items_sent = notify(user, 'notify_type_with_length_over_thirty')
+        # 1 news model
+        self.assertEquals(items_sent, 1)
+
+        self.assertEquals(
+            Notification.objects.filter(notify_type='notify_type_with_length_over_thirty').count(),
+            1,
+        )
+
 class ModelUnicodeTest(TestCase):
     def test_notification_unicode(self):
         notice = Notification()
