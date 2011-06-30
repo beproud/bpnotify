@@ -5,9 +5,9 @@ from setuptools import setup, find_packages
  
 setup (
     name='bpnotify',
-    version='0.35',
-    description='Nofication routing for Django',
-    author='K.K. BeProud',
+    version='0.36',
+    description='Notification routing for Django',
+    author='Ian Lewis',
     author_email='ian@beproud.jp',
     url='https://project.beproud.jp/hg/bpnotify/',
     classifiers=[
