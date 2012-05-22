@@ -1,14 +1,12 @@
 #:coding=utf8:
 
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from django.core import mail
-from django.conf import settings
 from django.test import TestCase
 
 from beproud.django.notify.tests.base import TestBase
 
-from beproud.django.notify.api import *
+from beproud.django.notify.api import notify_now
 
 __all__ = ('MailNotifyTest',)
 
@@ -17,7 +15,7 @@ class MailNotifyTest(TestBase, TestCase):
     
     def test_sending_mail(self):
         user = User.objects.get(pk=2)
-        items_sent = notify(user, 'private_msg', extra_data={"spam": "eggs"})
+        items_sent = notify_now(user, 'private_msg', extra_data={"spam": "eggs"})
 
         # 1 private_messages model
         # 1 news model
@@ -30,12 +28,12 @@ class MailNotifyTest(TestBase, TestCase):
 
     def test_from_email(self):
         user = User.objects.get(pk=2)
-        items_sent = notify(user, 'private_msg', extra_data={"spam": "eggs", "from_email": "spameggs@example.com"})
+        notify_now(user, 'private_msg', extra_data={"spam": "eggs", "from_email": "spameggs@example.com"})
         self.assertEquals(len(mail.outbox), 1)
         self.assertEquals(mail.outbox[0].from_email, "spameggs@example.com")
 
     def test_from_mail(self):
         user = User.objects.get(pk=2)
-        items_sent = notify(user, 'private_msg', extra_data={"spam": "eggs", "from_mail": "spameggs@example.com"})
+        notify_now(user, 'private_msg', extra_data={"spam": "eggs", "from_mail": "spameggs@example.com"})
         self.assertEquals(len(mail.outbox), 1)
         self.assertEquals(mail.outbox[0].from_email, "spameggs@example.com")

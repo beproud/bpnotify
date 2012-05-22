@@ -9,7 +9,7 @@ from django.test import TestCase
 from beproud.django.notify.tests.base import TestBase
 from beproud.django.notify.models import Notification, NotifySetting
 from beproud.django.notify.api import (
-    notify,
+    notify_now,
     set_notify_setting,
     get_notify_setting,
     get_notifications,
@@ -26,7 +26,7 @@ class BasicNotifyTest(TestBase, TestCase):
     
     def test_sending_model(self):
         user = User.objects.get(pk=2)
-        items_sent = notify(user, 'follow', extra_data={"followed": "eggs"})
+        items_sent = notify_now(user, 'follow', extra_data={"followed": "eggs"})
         # 1 news model
         self.assertEquals(items_sent, 1)
 
@@ -41,7 +41,7 @@ class BasicNotifyTest(TestBase, TestCase):
         self.assertEquals(len(private_messages), 0)
 
     def test_sending_model_null(self):
-        items_sent = notify(None, 'follow', extra_data={"followed": "eggs"})
+        items_sent = notify_now(None, 'follow', extra_data={"followed": "eggs"})
         # 1 news model
         self.assertEquals(items_sent, 1)
 
@@ -57,7 +57,7 @@ class BasicNotifyTest(TestBase, TestCase):
 
     def test_sending_model_types(self):
         user = User.objects.get(pk=2)
-        items_sent = notify(user, 'private_msg', extra_data={"spam": "eggs"})
+        items_sent = notify_now(user, 'private_msg', extra_data={"spam": "eggs"})
         # 1 private_messages model
         # 1 private_messages mail
         # 1 news model
@@ -78,7 +78,7 @@ class BasicNotifyTest(TestBase, TestCase):
         self.assertEquals(news[0].extra_data.get('spam'), 'eggs')
 
     def test_sending_model_types_null(self):
-        items_sent = notify(None, 'private_msg', extra_data={"spam": "eggs"})
+        items_sent = notify_now(None, 'private_msg', extra_data={"spam": "eggs"})
         # 1 private_messages model
         # 0 private_messages mail (No mail to null target)
         # 1 news model
@@ -101,7 +101,7 @@ class BasicNotifyTest(TestBase, TestCase):
 
     def test_sending_model_multi(self):
         user = [User.objects.get(pk=1), User.objects.get(pk=2), None]
-        items_sent = notify(user, 'private_msg', extra_data={"spam": "eggs"})
+        items_sent = notify_now(user, 'private_msg', extra_data={"spam": "eggs"})
 
         # 3 private_messages model
         # 2 private_messages mail (No mail to null target)
@@ -180,11 +180,11 @@ class BasicNotifyTest(TestBase, TestCase):
     def test_sending_with_settings(self):
         user = [User.objects.get(pk=1), User.objects.get(pk=2)]
 
-        items_sent = notify(user, 'followed', extra_data={"spam": "eggs"})
+        items_sent = notify_now(user, 'followed', extra_data={"spam": "eggs"})
         self.assertEquals(items_sent, 0)
 
         self.assertTrue(set_notify_setting(user[0], 'followed', 'news', True))
-        items_sent = notify(user, 'followed', extra_data={"spam": "eggs"})
+        items_sent = notify_now(user, 'followed', extra_data={"spam": "eggs"})
 
         # 1 news model
         self.assertEquals(items_sent, 1)
@@ -200,7 +200,7 @@ class BasicNotifyTest(TestBase, TestCase):
 
     def test_get_notifications(self):
         user = [User.objects.get(pk=1), User.objects.get(pk=2)]
-        items_sent = notify(user, 'private_msg', extra_data={"spam": "eggs"})
+        items_sent = notify_now(user, 'private_msg', extra_data={"spam": "eggs"})
 
         # 2 private_messages model
         # 2 private_messages mail
@@ -234,7 +234,7 @@ class BasicNotifyTest(TestBase, TestCase):
     def test_object_list(self):
         user = User.objects.get(pk=2)
         for i in range(15):
-            notify(user, 'follow', extra_data={"followed": "eggs"})
+            notify_now(user, 'follow', extra_data={"followed": "eggs"})
         
         object_list = NotifyObjectList(user, 'news')
         self.assertEqual(len(object_list), 15)
@@ -261,7 +261,7 @@ class BasicNotifyTest(TestBase, TestCase):
         try:
             object_list[10]
             self.fail("Expected IndexError")
-        except IndexError, e:
+        except IndexError:
             pass
 
         self.assertEqual(object_list[10:11], [])
@@ -271,7 +271,7 @@ class BasicNotifyTest(TestBase, TestCase):
     def test_notify_type_length(self):
         # Test notify_types with length over 30
         user = User.objects.get(pk=2)
-        items_sent = notify(user, 'notify_type_with_length_over_thirty')
+        items_sent = notify_now(user, 'notify_type_with_length_over_thirty')
         # 1 news model
         self.assertEquals(items_sent, 1)
 

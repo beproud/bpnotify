@@ -19,6 +19,7 @@ def main():
         'django.contrib.auth',
         'django.contrib.contenttypes',
         'beproud.django.notify',
+        'djcelery',
     )
     global_settings.DATABASE_ENGINE = "sqlite3"
     global_settings.DATABASE_NAME = ":memory:"
@@ -26,6 +27,8 @@ def main():
     global_settings.TEMPLATE_DIRS = (
         os.path.join(BASE_PATH, 'beproud', 'django', 'notify', 'tests', 'templates'),
     )
+
+    global_settings.CELERY_ALWAYS_EAGER = True
 
     global_settings.BPNOTIFY_MEDIA = {
         "news": {

@@ -8,6 +8,7 @@ syntax: glob
 *.pyc
 *.swp
 *.egg-info
+*.egg
 build
 dist
 pip-log.txt

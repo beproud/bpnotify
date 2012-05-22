@@ -23,5 +23,13 @@ setup (
     packages=find_packages(),
     namespace_packages=['beproud', 'beproud.django'],
     test_suite='tests.main',
+    install_requires=[
+        'Django>=1.2.7',
+        'django-jsonfield>=0.8.7',
+    ],
+    tests_require=[
+        'mock>=0.7.2',
+        'django-celery>=2.2.4',
+    ],
     zip_safe=False,
 )
