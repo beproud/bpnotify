@@ -24,7 +24,7 @@ setup (
     namespace_packages=['beproud', 'beproud.django'],
     test_suite='tests.main',
     install_requires=[
-        'Django>=1.2.7',
+        'Django>=1.2',
         'django-jsonfield>=0.8.7',
     ],
     tests_require=[

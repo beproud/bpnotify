@@ -9,6 +9,7 @@ syntax: glob
 *.swp
 *.egg-info
 *.egg
+.tox
 build
 dist
 pip-log.txt

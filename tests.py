@@ -1,7 +1,5 @@
 import os
 import sys
-import unittest
-import doctest
 import django
 
 BASE_PATH = os.path.dirname(__file__)
@@ -15,14 +13,25 @@ def main():
     os.environ["DJANGO_SETTINGS_MODULE"] = "django.conf.global_settings"
     from django.conf import global_settings
 
+    global_settings.SECRET_KEY = "SECRET"
     global_settings.INSTALLED_APPS = (
         'django.contrib.auth',
         'django.contrib.contenttypes',
         'beproud.django.notify',
         'djcelery',
     )
-    global_settings.DATABASE_ENGINE = "sqlite3"
-    global_settings.DATABASE_NAME = ":memory:"
+
+    if django.VERSION > (1,1):
+        global_settings.DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': ':memory:',
+            }
+        }
+    else:
+        global_settings.DATABASE_ENGINE = "sqlite3"
+        global_settings.DATABASE_NAME = ":memory:"
+
     #global_settings.ROOT_URLCONF = 'notify.tests.urls'
     global_settings.TEMPLATE_DIRS = (
         os.path.join(BASE_PATH, 'beproud', 'django', 'notify', 'tests', 'templates'),
