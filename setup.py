@@ -29,6 +29,7 @@ setup (
     ],
     tests_require=[
         'mock>=0.7.2',
+        'celery>=2.2.7',
         'django-celery>=2.2.4',
     ],
     zip_safe=False,

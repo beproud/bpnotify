@@ -2,6 +2,9 @@ import os
 import sys
 import django
 
+# Make sure djcelery is imported before celery
+import djcelery
+
 BASE_PATH = os.path.dirname(__file__)
 
 def main():
@@ -21,16 +24,12 @@ def main():
         'djcelery',
     )
 
-    if django.VERSION > (1,1):
-        global_settings.DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': ':memory:',
-            }
+    global_settings.DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
         }
-    else:
-        global_settings.DATABASE_ENGINE = "sqlite3"
-        global_settings.DATABASE_NAME = ":memory:"
+    }
 
     #global_settings.ROOT_URLCONF = 'notify.tests.urls'
     global_settings.TEMPLATE_DIRS = (
