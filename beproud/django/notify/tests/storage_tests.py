@@ -2,15 +2,16 @@
 
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
-from django.core import mail
-from django.conf import settings
 from django.test import TestCase
 
 from beproud.django.notify.tests.base import TestBase
 
 from beproud.django.notify.storage import get_storage
 from beproud.django.notify.models import NotifySetting
-from beproud.django.notify.api import *
+from beproud.django.notify.api import (
+    get_notify_setting,
+    set_notify_setting,
+)
 
 __all__ = (
     'DBStorageTest',
