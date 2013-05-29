@@ -7,6 +7,7 @@ from django.utils.encoding import force_unicode
 from django.utils.functional import memoize
 
 __all__ = (
+    'load_backend',
     'notify',
     'notify_now',
     'get_notifications',
