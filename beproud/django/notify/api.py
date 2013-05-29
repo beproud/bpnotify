@@ -72,7 +72,6 @@ def _get_media_map():
     return media_map
 _get_media_map = memoize(_get_media_map, _media_map_cache, 0)
 
-_notify_backend_cache = {}
 def load_backend(backend_path):
     """
     Load the auth backend with the given name
@@ -87,7 +86,6 @@ def load_backend(backend_path):
         raise ImproperlyConfigured('Error importing notify backend %s: "%s"' % (backend_path, e))
     except ValueError, e:
         raise ImproperlyConfigured('Error importing notify backends. Is BPNOTIFY_MEDIA a correctly defined dict?')
-load_backend = memoize(load_backend, _notify_backend_cache, 1)
 
 def notify(targets, notify_type, extra_data={}, include_media=None, exclude_media=[]):
     from django.conf import settings
