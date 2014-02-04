@@ -24,7 +24,7 @@ class ModelBackend(BaseBackend):
         try:
             notification.save()
             return 1
-        except (TypeError, DatabaseError), e:
+        except (TypeError, DatabaseError):
             # extra_data could not be serialized to JSON or
             # there was some kind of Database error
             # TODO: logging
@@ -53,17 +53,14 @@ class ModelBackend(BaseBackend):
             else:
                 notifications = notifications[start:end]
 
-        def _func(n):
-            return {
-                'id': 'Notification:%s' % n.id,
-                'target': n.target,
-                'notify_type': n.notify_type,
-                'media': n.media,
-                'extra_data': n.extra_data,
-                'ctime': n.ctime,
-            }
-
-        return map(_func, notifications)
+        return [{ 
+            'id': 'Notification:%s' % n.id,
+            'target': n.target,
+            'notify_type': n.notify_type,
+            'media': n.media,
+            'extra_data': n.extra_data,
+            'ctime': n.ctime,
+        } for n in notifications]
 
     def count(self, target, media):
         from beproud.django.notify.models import Notification

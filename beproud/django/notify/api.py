@@ -209,7 +209,7 @@ def get_notifications(target, media_name, start=None, end=None):
     """
     Retrieves notifications for the given media from the first
     backend that supports retrieving. Backends that raise a
-    NotImplemented exception will be ignored.
+    NotImplementedError will be ignored.
 
     The list of notifications will be an iterable of dicts
     in the following format:
@@ -231,7 +231,7 @@ def get_notifications(target, media_name, start=None, end=None):
         for backend in media_settings['backends']:
             try:
                 return backend.get(target, media_name, start, end)
-            except NotImplemented, e:
+            except NotImplementedError:
                 logger.debug('''Backend "%s" doesn't support retrieval. skipping.''' % backend)
     return []
 
@@ -249,7 +249,7 @@ def get_notification_count(target, media_name):
         for backend in media_settings['backends']:
             try:
                 return backend.count(target, media_name)
-            except NotImplemented, e:
+            except NotImplementedError:
                 logger.debug('''Backend "%s" doesn't support counts. skipping.''' % backend)
     return 0
 

@@ -24,7 +24,7 @@ class BaseBackend(object):
         return num_sent
 
     def _send(self, target, notify_type, media, extra_data={}):
-        raise NotImplemented('You must implement the _send() method in from the BaseBackend class.')
+        raise NotImplementedError('You must implement the _send() method in from the BaseBackend class.')
 
     def get(self, target, media, start=None, end=None):
         """
@@ -55,7 +55,7 @@ class BaseBackend(object):
             ...
         ]
         """
-        raise NotImplemented('This backend does not support retrieving notifications.')
+        raise NotImplementedError('This backend does not support retrieving notifications.')
 
     def count(self, target, media):
         """
@@ -63,4 +63,4 @@ class BaseBackend(object):
         for the given media. The backend should return notifications in the
         order they were sent if possible.
         """
-        raise NotImplemented('This backend does not support retrieving counts.')
+        raise NotImplementedError('This backend does not support retrieving counts.')
