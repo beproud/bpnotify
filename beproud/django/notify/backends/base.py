@@ -1,5 +1,6 @@
 #:coding=utf8:
 
+
 class BaseBackend(object):
 
     def send(self, targets, notify_type, media, extra_data={}):
@@ -24,7 +25,8 @@ class BaseBackend(object):
         return num_sent
 
     def _send(self, target, notify_type, media, extra_data={}):
-        raise NotImplementedError('You must implement the _send() method in from the BaseBackend class.')
+        raise NotImplementedError("You must implement the _send() method in "
+                                  "from the BaseBackend class.")
 
     def get(self, target, media, start=None, end=None):
         """
@@ -32,7 +34,7 @@ class BaseBackend(object):
         backend for the given media. The backend should
         return notifications in the order they were sent
         if possible.
-        
+
         If given a start or end index the backend should return only
         the notifications within the given range. If no start index
         is given then the backend should return the first available

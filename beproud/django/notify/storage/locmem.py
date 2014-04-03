@@ -2,6 +2,7 @@
 
 from beproud.django.notify.storage.base import BaseStorage
 
+
 class LocalMemoryStorage(BaseStorage):
     def __init__(self):
         self._data = {}

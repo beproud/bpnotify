@@ -8,6 +8,7 @@ from beproud.django.notify.storage.db import DBStorage
 
 __all__ = ('CachedDBStorage',)
 
+
 class CachedDBStorage(DBStorage):
     """
     A notification settings backend for storing user
@@ -18,7 +19,7 @@ class CachedDBStorage(DBStorage):
     def make_key(self, target, notify_type, media_name):
         content_type = ContentType.objects.get_for_model(target)
         key_list = (
-            smart_str(target.pk), 
+            smart_str(target.pk),
             smart_str(content_type.pk),
             smart_str(notify_type),
             smart_str(media_name),

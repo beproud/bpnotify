@@ -3,6 +3,7 @@
 from django.contrib.contenttypes.models import ContentType
 from django.utils.encoding import smart_str
 
+
 class BaseStorage(object):
     """
     This is the base backend for user identification data storage.
@@ -16,7 +17,12 @@ class BaseStorage(object):
 
     def make_key(self, target, notify_type, media_name):
         content_type = ContentType.objects.get_for_model(target)
-        key_list = map(lambda a: smart_str(a), [target.pk, content_type.pk, notify_type, media_name])
+        key_list = (
+            smart_str(target.pk),
+            smart_str(content_type.pk),
+            smart_str(notify_type),
+            smart_str(media_name),
+        )
         return u'bpnotify|%s' % (':'.join(key_list))
 
     def get(self, target, notify_type, media_name, default=None):
