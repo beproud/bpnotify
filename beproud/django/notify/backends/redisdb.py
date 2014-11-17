@@ -14,9 +14,11 @@ from beproud.django.notify.utils import local_to_utc, utc_to_local, parse_utc_is
 try:
     from redis import Redis, RedisError
 except ImportError:
-    raise ImproperlyConfigured('You must install the redis python client in order to use the redis backend')
+    raise ImproperlyConfigured("You must install the redis python client "
+                               "in order to use the redis backend")
 
 logger = logging.getLogger(__name__)
+
 
 def _key_func(target, media):
     """
@@ -29,6 +31,7 @@ def _key_func(target, media):
         target.pk if target is not None else 'none',
         media,
     )
+
 
 class RedisBackend(BaseBackend):
     """
@@ -45,7 +48,7 @@ class RedisBackend(BaseBackend):
         self.key_func = key_func
         self.max_items = max_items
         self.redis = Redis(**kwargs)
-    
+
     def _send(self, target, notify_type, media, extra_data={}):
         try:
             key = self.key_func(target, media)
@@ -94,7 +97,6 @@ class RedisBackend(BaseBackend):
                 output_data.append(None)
 
         return output_data
-        
 
     def count(self, target, media):
         key = self.key_func(target, media)

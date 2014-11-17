@@ -8,6 +8,7 @@ from beproud.django.notify.models import NotifySetting
 
 __all__ = ('DBStorage',)
 
+
 class DBStorage(BaseStorage):
     """
     A notification settings backend for storing target
@@ -21,10 +22,10 @@ class DBStorage(BaseStorage):
         try:
             content_type = ContentType.objects.get_for_model(target)
             return NotifySetting.objects.values('send').get(
-                target_content_type = content_type,
-                target_object_id = target.pk,
-                notify_type = notify_type,
-                media = media_name,
+                target_content_type=content_type,
+                target_object_id=target.pk,
+                notify_type=notify_type,
+                media=media_name,
             )['send']
         except NotifySetting.DoesNotExist:
             return default
@@ -36,21 +37,21 @@ class DBStorage(BaseStorage):
                 # We want to update the send parameter here so
                 # we don't use get_or_create()
                 setting = NotifySetting.objects.get(
-                    target_content_type = content_type,
-                    target_object_id = target.pk,
-                    notify_type = notify_type,
-                    media = media_name,
+                    target_content_type=content_type,
+                    target_object_id=target.pk,
+                    notify_type=notify_type,
+                    media=media_name,
                 )
                 setting.send = send
                 setting.save()
                 return True
             except NotifySetting.DoesNotExist:
                 setting = NotifySetting.objects.create(
-                    target_content_type = content_type,
-                    target_object_id = target.pk,
-                    notify_type = notify_type,
-                    media = media_name,
-                    send = send,
+                    target_content_type=content_type,
+                    target_object_id=target.pk,
+                    notify_type=notify_type,
+                    media=media_name,
+                    send=send,
                 )
                 return True
         except DatabaseError:
