@@ -5,6 +5,7 @@ from django.db import DatabaseError
 
 from beproud.django.notify.backends.base import BaseBackend
 
+
 class ModelBackend(BaseBackend):
     """
     A basic backend that saves to the default
@@ -15,26 +16,26 @@ class ModelBackend(BaseBackend):
         from beproud.django.notify.models import Notification
 
         notification = Notification(
-            notify_type = notify_type,
-            media = media,
-            extra_data = extra_data,
+            notify_type=notify_type,
+            media=media,
+            extra_data=extra_data,
         )
         notification.target = target
 
         try:
             notification.save()
             return 1
-        except (TypeError, DatabaseError), e:
+        except (TypeError, DatabaseError):
             # extra_data could not be serialized to JSON or
             # there was some kind of Database error
             # TODO: logging
             return 0
-    
+
     def get(self, target, media, start=None, end=None):
         from beproud.django.notify.models import Notification
 
         filter_kwargs = {
-            'media': media, 
+            'media': media,
         }
         if target is None:
             filter_kwargs['target_content_type__isnull'] = True
@@ -44,7 +45,7 @@ class ModelBackend(BaseBackend):
             filter_kwargs['target_object_id'] = target.pk
 
         notifications = Notification.objects.filter(**filter_kwargs).order_by('-ctime')
-        
+
         if start is not None or end is not None:
             if start is None:
                 notifications = notifications[:end]
@@ -53,22 +54,19 @@ class ModelBackend(BaseBackend):
             else:
                 notifications = notifications[start:end]
 
-        def _func(n):
-            return {
-                'id': 'Notification:%s' % n.id,
-                'target': n.target,
-                'notify_type': n.notify_type,
-                'media': n.media,
-                'extra_data': n.extra_data,
-                'ctime': n.ctime,
-            }
-
-        return map(_func, notifications)
+        return [{
+            'id': 'Notification:%s' % n.id,
+            'target': n.target,
+            'notify_type': n.notify_type,
+            'media': n.media,
+            'extra_data': n.extra_data,
+            'ctime': n.ctime,
+        } for n in notifications]
 
     def count(self, target, media):
         from beproud.django.notify.models import Notification
         return Notification.objects.filter(
-            target_content_type = ContentType.objects.get_for_model(target),
-            target_object_id = target.pk,
-            media = media, 
+            target_content_type=ContentType.objects.get_for_model(target),
+            target_object_id=target.pk,
+            media=media,
         ).count()

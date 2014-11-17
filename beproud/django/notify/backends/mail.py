@@ -12,6 +12,7 @@ from beproud.django.notify.backends.base import BaseBackend
 
 logger = logging.getLogger('beproud.django.notify')
 
+
 class EmailBackend(BaseBackend):
     """
     A backend that sends email for the given notification type.
@@ -49,8 +50,13 @@ class EmailBackend(BaseBackend):
         if targets:
             try:
                 for target in targets:
-                    to_email = getattr(target, 'email', getattr(target, 'mail', extra_data.get('email', extra_data.get('mail'))))
-                    from_email = extra_data.get('from_email', extra_data.get('from_mail', settings.DEFAULT_FROM_EMAIL))
+                    to_email = getattr(target, 'email',
+                                       getattr(target, 'mail',
+                                               extra_data.get('email', extra_data.get('mail'))))
+                    from_email = extra_data.get('from_email',
+                                                extra_data.get('from_mail',
+                                                               settings.DEFAULT_FROM_EMAIL))
+
                     if to_email:
                             context = {
                                 'target': target,
@@ -59,13 +65,14 @@ class EmailBackend(BaseBackend):
                             }
                             context.update(extra_data)
 
-                            subject = render_to_string(subject_template, context).replace(u"\r",u"").replace(u"\n",u"")
+                            subject = render_to_string(subject_template, context)
+                            subject = subject.replace(u"\r", u"").replace(u"\n", u"")
 
                             try:
                                 body_html = render_to_string(body_html_template, context)
                             except TemplateDoesNotExist, e:
                                 body_html = None
-                        
+
                             try:
                                 body_text = render_to_string(body_text_template, context)
                             except TemplateDoesNotExist, e:
@@ -76,12 +83,14 @@ class EmailBackend(BaseBackend):
 
                             if body_text and body_html:
                                 # HTML mail
-                                message = EmailMultiAlternatives(subject, body_text, to=[to_email], from_email=from_email)
+                                message = EmailMultiAlternatives(subject, body_text, to=[to_email],
+                                                                 from_email=from_email)
                                 message.attach_alternative(body_html, "text/html")
                                 messages.append(message)
                             elif body_text:
                                 # Normal Text Mail
-                                messages.append(EmailMessage(subject, body_text, to=[to_email], from_email=from_email))
+                                messages.append(EmailMessage(subject, body_text,
+                                                             to=[to_email], from_email=from_email))
             except TemplateDoesNotExist, e:
                 # Subject template does not exist.
                 logger.warning('Subject template does not exist "%s"' % e)

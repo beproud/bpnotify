@@ -62,7 +62,12 @@ def main():
 
     if django.VERSION > (1,2):
         test_runner = test_runner()
-        failures = test_runner.run_tests(['notify'])
+        if django.VERSION > (1,6):
+            # See: https://docs.djangoproject.com/en/1.6/topics/testing/overview/#running-tests
+            failures = test_runner.run_tests(['beproud.django.notify.tests'])
+        else:
+            failures = test_runner.run_tests(['notify'])
+
     else:
         failures = test_runner(['notify'], verbosity=1)
     sys.exit(failures)
