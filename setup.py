@@ -2,22 +2,22 @@
 #:coding=utf-8:
 
 from setuptools import setup, find_packages
- 
-setup (
+
+setup(
     name='bpnotify',
-    version='0.41',
+    version='0.42a',
     description='Notification routing for Django',
     author='Ian Lewis',
     author_email='ian@beproud.jp',
     url='https://project.beproud.jp/hg/bpnotify/',
     classifiers=[
-      'Development Status :: 3 - Alpha',
-      'Environment :: Plugins',
-      'Framework :: Django',
-      'Intended Audience :: Developers',
-      'License :: OSI Approved :: BSD License',
-      'Programming Language :: Python',
-      'Topic :: Software Development :: Libraries :: Python Modules',
+        'Development Status :: 3 - Alpha',
+        'Environment :: Plugins',
+        'Framework :: Django',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: BSD License',
+        'Programming Language :: Python',
+        'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     include_package_data=True,
     packages=find_packages(),
