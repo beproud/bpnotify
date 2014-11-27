@@ -3,9 +3,10 @@ import sys
 import django
 
 # Make sure djcelery is imported before celery
-import djcelery
+import djcelery  # NOQA
 
 BASE_PATH = os.path.dirname(__file__)
+
 
 def main():
     """
@@ -48,28 +49,32 @@ def main():
         },
         "private_messages": {
             "verbose_name": "Private Message",
-            "default_types": ("private_msg","notify_type_with_length_over_thirty"),
+            "default_types": ("private_msg", "notify_type_with_length_over_thirty"),
             "backends": (
                 "beproud.django.notify.backends.model.ModelBackend",
                 "beproud.django.notify.backends.mail.EmailBackend",
             ),
         },
     }
-    global_settings.BPNOTIFY_SETTINGS_STORAGE='beproud.django.notify.storage.db.DBStorage'
+    global_settings.BPNOTIFY_SETTINGS_STORAGE = 'beproud.django.notify.storage.db.DBStorage'
+
+    if django.VERSION > (1, 7):
+        django.setup()
 
     from django.test.utils import get_runner
     test_runner = get_runner(global_settings)
 
-    if django.VERSION > (1,2):
+    if django.VERSION > (1, 2):
         test_runner = test_runner()
-        if django.VERSION > (1,6):
+        if django.VERSION > (1, 6):
             # See: https://docs.djangoproject.com/en/1.6/topics/testing/overview/#running-tests
-            failures = test_runner.run_tests(['beproud.django.notify.tests'])
+            failures = test_runner.run_tests(['beproud.django.notify'])
         else:
             failures = test_runner.run_tests(['notify'])
 
     else:
         failures = test_runner(['notify'], verbosity=1)
+
     sys.exit(failures)
 
 if __name__ == '__main__':
