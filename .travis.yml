@@ -1,0 +1,19 @@
+language: python
+sudo: false
+python: 2.7
+env:
+  matrix:
+    - TOXENV=django13-py26
+    - TOXENV=django12-py27
+    - TOXENV=django13-py26
+    - TOXENV=django13-py27
+    - TOXENV=django14-py26
+    - TOXENV=django14-py27
+    - TOXENV=django15-py26
+    - TOXENV=django16-py27
+    - TOXENV=django16-py26
+    - TOXENV=django17-py27
+
+install:
+  - pip install tox
+script: tox
