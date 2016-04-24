@@ -7,6 +7,7 @@ env:
     - TOXENV=django15-py27
     - TOXENV=django16-py27
     - TOXENV=django17-py27
+    - TOXENV=django18-py27
 
 install:
   - pip install tox
