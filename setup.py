@@ -9,7 +9,7 @@ setup(
     description='Notification routing for Django',
     author='Ian Lewis',
     author_email='ian@beproud.jp',
-    url='https://project.beproud.jp/hg/bpnotify/',
+    url='https://github.com/beproud/bpnotify/',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Plugins',
