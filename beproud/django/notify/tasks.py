@@ -3,11 +3,20 @@
 from django.core.exceptions import ImproperlyConfigured
 from django.conf import settings
 
-try:
-    from celery.task import Task
-    from celery.registry import tasks
-except ImportError:
-    raise ImproperlyConfigured("You must install celery to use the asyncronous task queue")
+import celery
+from celery.task import Task
+from celery.registry import tasks
+
+if celery.VERSION < (3, 1):
+    try:
+        import djcelery  # NOQA
+    except ImportError:
+        from django.core.exceptions import ImproperlyConfigured
+        raise ImproperlyConfigured("when used celery<3.1, djcelery is required!")
+
+    if 'djcelery' not in settings.INSTALLED_APPS:
+        from django.core.exceptions import ImproperlyConfigured
+        raise ImproperlyConfigured("djcelery not in INSTALLED_APPS!")
 
 from beproud.django.notify import notify_now
 
