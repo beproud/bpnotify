@@ -1,4 +1,4 @@
-|build-status|
+[![Build Status](https://travis-ci.org/beproud/bpmailer.svg?branch=master)](https://travis-ci.org/beproud/bpmailer)
 
 # Requirements
 
@@ -8,7 +8,3 @@
 * django-jsonfield (0.8, 0.9)
 
 django-jsonfield > 0.9.0 does not support django 1.2 and 1.3
-
-.. |build-status| image:: https://api.travis-ci.org/beproud/bpnotify.svg?branch=master
-    :alt: Build status
-    :target: https://travis-ci.org/beproud/bpnotify
