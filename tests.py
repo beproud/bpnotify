@@ -2,8 +2,6 @@ import os
 import sys
 import django
 
-# Make sure djcelery is imported before celery
-import djcelery  # NOQA
 
 BASE_PATH = os.path.dirname(__file__)
 
@@ -22,7 +20,6 @@ def main():
         'django.contrib.auth',
         'django.contrib.contenttypes',
         'beproud.django.notify',
-        'djcelery',
     )
 
     global_settings.DATABASES = {
@@ -57,6 +54,14 @@ def main():
         },
     }
     global_settings.BPNOTIFY_SETTINGS_STORAGE = 'beproud.django.notify.storage.db.DBStorage'
+
+    import celery
+    if celery.VERSION >= (3, 1):
+        app = celery.Celery()
+        app.config_from_object('django.conf:settings')
+        app.autodiscover_tasks(lambda: global_settings.INSTALLED_APPS)
+    else:
+        global_settings.INSTALLED_APPS += ('djcelery',)
 
     if django.VERSION > (1, 7):
         django.setup()

@@ -9,7 +9,7 @@ setup(
     description='Notification routing for Django',
     author='Ian Lewis',
     author_email='ian@beproud.jp',
-    url='https://project.beproud.jp/hg/bpnotify/',
+    url='https://github.com/beproud/bpnotify/',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Plugins',
@@ -28,9 +28,8 @@ setup(
         'django-jsonfield>=0.8.7',
     ],
     tests_require=[
-        'mock>=0.7.2',
         'celery>=2.2.7',
-        'django-celery>=2.2.4',
+        'mock>=0.7.2',
     ],
     zip_safe=False,
 )
