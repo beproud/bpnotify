@@ -51,6 +51,7 @@ class Notification(models.Model):
     class Meta:
         ordering = ('-ctime',)
 
+
 class NotifySetting(models.Model):
     target_content_type = models.ForeignKey(ContentType, verbose_name=_('content type id'))
     target_object_id = models.PositiveIntegerField(_('target id'))
