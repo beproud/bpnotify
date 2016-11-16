@@ -51,7 +51,6 @@ class Notification(models.Model):
     class Meta:
         ordering = ('-ctime',)
 
-
 class NotifySetting(models.Model):
     target_content_type = models.ForeignKey(ContentType, verbose_name=_('content type id'))
     target_object_id = models.PositiveIntegerField(_('target id'))
@@ -59,7 +58,7 @@ class NotifySetting(models.Model):
 
     notify_type = models.CharField(_('notify type'), max_length=100, db_index=True)
     media = models.CharField(_('media'), max_length=100, choices=MediaChoices(), db_index=True)
-    send = models.BooleanField(_('send?'))
+    send = models.BooleanField(_('send?'), default=True)
 
     def __unicode__(self):
         return u"%s (%s, %s, %s)" % (self.target, self.notify_type, self.media,
