@@ -59,7 +59,7 @@ class NotifySetting(models.Model):
 
     notify_type = models.CharField(_('notify type'), max_length=100, db_index=True)
     media = models.CharField(_('media'), max_length=100, choices=MediaChoices(), db_index=True)
-    send = models.BooleanField(_('send?'))
+    send = models.BooleanField(_('send?'), default=False)
 
     def __unicode__(self):
         return u"%s (%s, %s, %s)" % (self.target, self.notify_type, self.media,
