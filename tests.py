@@ -60,22 +60,15 @@ def main():
     app.config_from_object('django.conf:settings', namespace='CELERY')
     app.autodiscover_tasks(lambda: global_settings.INSTALLED_APPS)
 
-    if django.VERSION > (1, 7):
-        django.setup()
+    django.setup()
 
     from django.test.utils import get_runner
     test_runner = get_runner(global_settings)
 
-    if django.VERSION > (1, 2):
-        test_runner = test_runner()
-        if django.VERSION > (1, 6):
-            # See: https://docs.djangoproject.com/en/1.6/topics/testing/overview/#running-tests
-            failures = test_runner.run_tests(['beproud.django.notify'])
-        else:
-            failures = test_runner.run_tests(['notify'])
-
-    else:
-        failures = test_runner(['notify'], verbosity=1)
+    test_runner = test_runner()
+    
+    # See: https://docs.djangoproject.com/en/1.6/topics/testing/overview/#running-tests
+    failures = test_runner.run_tests(['beproud.django.notify'])
 
     sys.exit(failures)
 
