@@ -1,4 +1,5 @@
 #:coding=utf8:
+import six
 
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -18,7 +19,7 @@ __all__ = (
 class MediaChoices(object):
     def __iter__(self):
         media_map = _get_media_map()
-        return iter((name, data['verbose_name']) for name, data in media_map.iteritems())
+        return iter((name, data['verbose_name']) for name, data in six.iteritems(media_map))
 
 
 class NotificationManager(models.Manager):

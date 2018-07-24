@@ -33,7 +33,7 @@ class Notify(Task):
                 include_media=include_media,
                 exclude_media=exclude_media,
             )
-        except Exception, e:
+        except Exception as e:
             return self.retry(
                 exc=e,
                 countdown=retry_countdown,
