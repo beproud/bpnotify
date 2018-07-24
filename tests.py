@@ -31,9 +31,14 @@ def main():
     }
 
     #global_settings.ROOT_URLCONF = 'notify.tests.urls'
-    global_settings.TEMPLATE_DIRS = (
-        os.path.join(BASE_PATH, 'beproud', 'django', 'notify', 'tests', 'templates'),
-    )
+    global_settings.TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [
+                os.path.join(BASE_PATH, 'beproud', 'django', 'notify', 'tests', 'templates')
+            ],
+        },
+    ]
 
     global_settings.CELERY_TASK_ALWAYS_EAGER = True
 
