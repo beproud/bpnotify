@@ -28,7 +28,7 @@ setup(
         'django-jsonfield>=1.0.1',
     ],
     tests_require=[
-        'celery>=3.2',
+        'celery>=4.1',
         'mock>=0.7.2',
     ],
     zip_safe=False,
