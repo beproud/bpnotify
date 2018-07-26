@@ -1,6 +1,7 @@
 #:coding=utf8:
 
 from datetime import datetime
+import six
 
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
@@ -286,7 +287,10 @@ class ModelUnicodeTest(TestCase):
         self.assertEquals(str(notice), "None (, )")
         notice.notify_type = u"テスト"
         notice.media = "yyy"
-        self.assertEquals(str(notice), u"None (テスト, yyy)".encode("utf-8"))
+        if six.PY2:
+            self.assertEquals(str(notice), u"None (テスト, yyy)".encode("utf-8"))
+        else:
+            self.assertEquals(str(notice), "None (テスト, yyy)")
 
     def test_notification_setting_unicode(self):
         setting = NotifySetting()
@@ -295,4 +299,7 @@ class ModelUnicodeTest(TestCase):
         setting.notify_type = u"テスト"
         setting.media = "yyy"
         setting.send = True
-        self.assertEquals(str(setting), u"None (テスト, yyy, send)".encode("utf-8"))
+        if six.PY2:
+            self.assertEquals(str(setting), u"None (テスト, yyy, send)".encode("utf-8"))
+        else:
+            self.assertEquals(str(setting), "None (テスト, yyy, send)")

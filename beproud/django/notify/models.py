@@ -30,6 +30,7 @@ class NotificationManager(models.Manager):
         )
 
 
+@six.python_2_unicode_compatible
 class Notification(models.Model):
     target_content_type = models.ForeignKey(ContentType, verbose_name=_('content type id'),
                                             db_index=True, null=True, blank=True)
@@ -46,13 +47,14 @@ class Notification(models.Model):
 
     objects = NotificationManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s (%s, %s)" % (self.target, self.notify_type, self.media)
 
     class Meta:
         ordering = ('-ctime',)
 
 
+@six.python_2_unicode_compatible
 class NotifySetting(models.Model):
     target_content_type = models.ForeignKey(ContentType, verbose_name=_('content type id'))
     target_object_id = models.PositiveIntegerField(_('target id'))
@@ -62,7 +64,7 @@ class NotifySetting(models.Model):
     media = models.CharField(_('media'), max_length=100, choices=MediaChoices(), db_index=True)
     send = models.BooleanField(_('send?'), default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s (%s, %s, %s)" % (self.target, self.notify_type, self.media,
                                      self.send and 'send' or 'no send')
 
