@@ -144,7 +144,7 @@ def notify_now(targets, notify_type, extra_data={}, include_media=None, exclude_
     for media_name in include_media:
         media_settings = media_map[media_name]
 
-        targets_to_send = filter(lambda t: get_notify_setting(t, notify_type, media_name), targets)
+        targets_to_send = list(filter(lambda t: get_notify_setting(t, notify_type, media_name), targets))
         if targets_to_send:
             for backend in media_settings['backends']:
                 num_sent += backend.send(targets_to_send, notify_type, media_name, extra_data)
@@ -164,7 +164,7 @@ class NotifyObjectList(object):
         self.media = media
 
     def __getitem__(self, key):
-        if not isinstance(key, (slice, int, long)):
+        if not isinstance(key, (slice, six.integer_types)):
             raise TypeError
         if isinstance(key, slice):
             notices = get_notifications(
