@@ -1,6 +1,7 @@
 import os
 import sys
 import django
+import celery
 
 
 BASE_PATH = os.path.dirname(__file__)
@@ -30,11 +31,16 @@ def main():
     }
 
     #global_settings.ROOT_URLCONF = 'notify.tests.urls'
-    global_settings.TEMPLATE_DIRS = (
-        os.path.join(BASE_PATH, 'beproud', 'django', 'notify', 'tests', 'templates'),
-    )
+    global_settings.TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [
+                os.path.join(BASE_PATH, 'beproud', 'django', 'notify', 'tests', 'templates')
+            ],
+        },
+    ]
 
-    global_settings.CELERY_ALWAYS_EAGER = True
+    global_settings.CELERY_TASK_ALWAYS_EAGER = True
 
     global_settings.BPNOTIFY_MEDIA = {
         "news": {
@@ -55,30 +61,19 @@ def main():
     }
     global_settings.BPNOTIFY_SETTINGS_STORAGE = 'beproud.django.notify.storage.db.DBStorage'
 
-    import celery
-    if celery.VERSION >= (3, 1):
-        app = celery.Celery()
-        app.config_from_object('django.conf:settings')
-        app.autodiscover_tasks(lambda: global_settings.INSTALLED_APPS)
-    else:
-        global_settings.INSTALLED_APPS += ('djcelery',)
+    app = celery.Celery()
+    app.config_from_object('django.conf:settings', namespace='CELERY')
+    app.autodiscover_tasks(lambda: global_settings.INSTALLED_APPS)
 
-    if django.VERSION > (1, 7):
-        django.setup()
+    django.setup()
 
     from django.test.utils import get_runner
     test_runner = get_runner(global_settings)
 
-    if django.VERSION > (1, 2):
-        test_runner = test_runner()
-        if django.VERSION > (1, 6):
-            # See: https://docs.djangoproject.com/en/1.6/topics/testing/overview/#running-tests
-            failures = test_runner.run_tests(['beproud.django.notify'])
-        else:
-            failures = test_runner.run_tests(['notify'])
-
-    else:
-        failures = test_runner(['notify'], verbosity=1)
+    test_runner = test_runner()
+    
+    # See: https://docs.djangoproject.com/en/1.6/topics/testing/overview/#running-tests
+    failures = test_runner.run_tests(['beproud.django.notify'])
 
     sys.exit(failures)
 

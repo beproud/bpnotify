@@ -2,8 +2,12 @@
 
 import logging
 
+import six
+
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.encoding import force_unicode
+
+if six.PY2:
+    from django.utils.encoding import force_unicode
 
 __all__ = (
     'load_backend',
@@ -33,7 +37,7 @@ def import_string(import_name, silent=False):
     :return: imported object
     """
     # force the import name to automatically convert to strings
-    if isinstance(import_name, unicode):
+    if isinstance(import_name, six.text_type):
         import_name = str(import_name)
     try:
         if ':' in import_name:
@@ -44,7 +48,7 @@ def import_string(import_name, silent=False):
             return __import__(import_name)
         # __import__ is not able to handle unicode strings in the fromlist
         # if the module is a package
-        if isinstance(obj, unicode):
+        if six.PY2 and isinstance(obj, six.text_type):
             obj = obj.encode('utf-8')
         return getattr(__import__(module, None, None, [obj]), obj)
     except (ImportError, AttributeError):
@@ -54,7 +58,8 @@ def import_string(import_name, silent=False):
 
 def _capfirst(value):
     if value:
-        value = force_unicode(value)
+        if six.PY2:
+            value = force_unicode(value)
         return "%s%s" % (value[0].upper(), value[1:])
     else:
         return value
@@ -91,9 +96,9 @@ def load_backend(backend_path):
 
     try:
         return import_string(backend_path)(**kwargs)
-    except (ImportError, AttributeError), e:
+    except (ImportError, AttributeError) as e:
         raise ImproperlyConfigured('Error importing notify backend %s: "%s"' % (backend_path, e))
-    except ValueError, e:
+    except ValueError as e:
         raise ImproperlyConfigured("Error importing notify backends. "
                                    "Is BPNOTIFY_MEDIA a correctly defined dict?")
 
@@ -139,7 +144,7 @@ def notify_now(targets, notify_type, extra_data={}, include_media=None, exclude_
     for media_name in include_media:
         media_settings = media_map[media_name]
 
-        targets_to_send = filter(lambda t: get_notify_setting(t, notify_type, media_name), targets)
+        targets_to_send = list(filter(lambda t: get_notify_setting(t, notify_type, media_name), targets))
         if targets_to_send:
             for backend in media_settings['backends']:
                 num_sent += backend.send(targets_to_send, notify_type, media_name, extra_data)
@@ -159,7 +164,7 @@ class NotifyObjectList(object):
         self.media = media
 
     def __getitem__(self, key):
-        if not isinstance(key, (slice, int, long)):
+        if not isinstance(key, (slice, six.integer_types)):
             raise TypeError
         if isinstance(key, slice):
             notices = get_notifications(

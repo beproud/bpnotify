@@ -24,11 +24,11 @@ setup(
     namespace_packages=['beproud', 'beproud.django'],
     test_suite='tests.main',
     install_requires=[
-        'Django>=1.2',
-        'django-jsonfield>=0.8.7',
+        'Django>=1.8',
+        'django-jsonfield>=1.0.1',
     ],
     tests_require=[
-        'celery>=2.2.7',
+        'celery>=4.1',
         'mock>=0.7.2',
     ],
     zip_safe=False,

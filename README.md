@@ -2,9 +2,8 @@
 
 # Requirements
 
-* Python (2.6, 2.7)
-* Celery (2.2, 3.0, 3.1)
-* Django (1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8)
-* django-jsonfield (0.8, 0.9)
+* Python (2.7, 3.6)
+* Celery (4.1)
+* Django (1.8, 1.11)
+* django-jsonfield (1.0.1)
 
-django-jsonfield > 0.9.0 does not support django 1.2 and 1.3

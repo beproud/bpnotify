@@ -3,11 +3,10 @@ sudo: false
 python: 2.7
 env:
   matrix:
-    - TOXENV=django14-py27
-    - TOXENV=django15-py27
-    - TOXENV=django16-py27
-    - TOXENV=django17-py27
-    - TOXENV=django18-py27
+    - TOXENV=py27-django18
+    - TOXENV=py27-django111
+    - TOXENV=py36-django18
+    - TOXENV=py36-django111
 
 install:
   - pip install tox

@@ -1,1 +1,1 @@
-from api import *
+from beproud.django.notify.api import *

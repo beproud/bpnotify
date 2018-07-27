@@ -70,12 +70,12 @@ class EmailBackend(BaseBackend):
 
                             try:
                                 body_html = render_to_string(body_html_template, context)
-                            except TemplateDoesNotExist, e:
+                            except TemplateDoesNotExist as e:
                                 body_html = None
 
                             try:
                                 body_text = render_to_string(body_text_template, context)
-                            except TemplateDoesNotExist, e:
+                            except TemplateDoesNotExist as e:
                                 body_text = None
 
                             if body_html and not body_text:
@@ -91,7 +91,7 @@ class EmailBackend(BaseBackend):
                                 # Normal Text Mail
                                 messages.append(EmailMessage(subject, body_text,
                                                              to=[to_email], from_email=from_email))
-            except TemplateDoesNotExist, e:
+            except TemplateDoesNotExist as e:
                 # Subject template does not exist.
                 logger.warning('Subject template does not exist "%s"' % e)
 

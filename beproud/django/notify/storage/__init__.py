@@ -14,7 +14,7 @@ __all__ = (
 def get_storage(storage_path, *args, **kwargs):
     try:
         return import_string(storage_path)(**kwargs)
-    except (ImportError, AttributeError, ValueError), e:
+    except (ImportError, AttributeError, ValueError) as e:
         raise ImproperlyConfigured('Error loading notify setting storage backend %s: "%s"' % (storage_path, e))
 
 def load_storage(storage_setting):
