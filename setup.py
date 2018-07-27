@@ -1,14 +1,27 @@
 #!/usr/bin/env python
 #:coding=utf-8:
 
+import os
 from setuptools import setup, find_packages
+
+def read_file(filename):
+    basepath = os.path.dirname(os.path.dirname(__file__))
+    filepath = os.path.join(basepath, filename)
+    if os.path.exists(filepath):
+        with open(filepath) as f:
+            read_text = f.read()
+        return read_text
+    else:
+        raise
 
 setup(
     name='bpnotify',
-    version='0.45',
+    version='0.46',
     description='Notification routing for Django',
     author='BeProud',
     author_email='project@beproud.jp',
+    long_description=read_file('README.md'),
+    long_description_content_type="text/markdown",
     url='https://github.com/beproud/bpnotify/',
     classifiers=[
         'Development Status :: 3 - Alpha',
@@ -26,6 +39,7 @@ setup(
     install_requires=[
         'Django>=1.8',
         'django-jsonfield>=1.0.1',
+        'six',
     ],
     tests_require=[
         'celery>=4.1',

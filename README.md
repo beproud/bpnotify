@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/beproud/bpmailer.svg?branch=master)](https://travis-ci.org/beproud/bpmailer)
+[![Build Status](https://travis-ci.org/beproud/bpnotify.svg?branch=master)](https://travis-ci.org/beproud/bpnotify)
 
 # Requirements
 
