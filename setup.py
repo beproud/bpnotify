@@ -7,12 +7,9 @@ from setuptools import setup, find_packages
 def read_file(filename):
     basepath = os.path.dirname(os.path.dirname(__file__))
     filepath = os.path.join(basepath, filename)
-    if os.path.exists(filepath):
-        with open(filepath) as f:
-            read_text = f.read()
-        return read_text
-    else:
-        raise IOError("File not found : %s" % filepath)
+    with open(filepath) as f:
+        read_text = f.read()
+    return read_text
 
 
 setup(
