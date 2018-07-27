@@ -12,7 +12,8 @@ def read_file(filename):
             read_text = f.read()
         return read_text
     else:
-        raise
+        raise IOError("File not found : %s" % filepath)
+
 
 setup(
     name='bpnotify',
