@@ -5,7 +5,7 @@ import os
 from setuptools import setup, find_packages
 
 def read_file(filename):
-    basepath = os.path.dirname(os.path.dirname(__file__))
+    basepath = os.path.dirname(__file__)
     filepath = os.path.join(basepath, filename)
     with open(filepath) as f:
         read_text = f.read()
