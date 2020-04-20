@@ -14,7 +14,7 @@ def read_file(filename):
 
 setup(
     name='bpnotify',
-    version='0.46',
+    version='0.47',
     description='Notification routing for Django',
     author='BeProud',
     author_email='project@beproud.jp',
@@ -35,12 +35,12 @@ setup(
     namespace_packages=['beproud', 'beproud.django'],
     test_suite='tests.main',
     install_requires=[
-        'Django>=1.8',
+        'Django>=1.11',
         'django-jsonfield>=1.0.1',
         'six',
     ],
     tests_require=[
-        'celery>=4.1',
+        'celery~=4.2.2',
         'mock>=0.7.2',
     ],
     zip_safe=False,
