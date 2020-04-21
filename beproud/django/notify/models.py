@@ -33,7 +33,8 @@ class NotificationManager(models.Manager):
 @six.python_2_unicode_compatible
 class Notification(models.Model):
     target_content_type = models.ForeignKey(ContentType, verbose_name=_('content type id'),
-                                            db_index=True, null=True, blank=True)
+                                            db_index=True, null=True, blank=True,
+                                            on_delete=models.CASCADE)
     target_object_id = models.PositiveIntegerField(_('target id'),
                                                    db_index=True, null=True, blank=True)
     target = GenericForeignKey('target_content_type', 'target_object_id')
@@ -56,7 +57,7 @@ class Notification(models.Model):
 
 @six.python_2_unicode_compatible
 class NotifySetting(models.Model):
-    target_content_type = models.ForeignKey(ContentType, verbose_name=_('content type id'))
+    target_content_type = models.ForeignKey(ContentType, verbose_name=_('content type id'), on_delete=models.CASCADE)
     target_object_id = models.PositiveIntegerField(_('target id'))
     target = GenericForeignKey('target_content_type', 'target_object_id')
 
