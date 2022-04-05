@@ -23,6 +23,9 @@ def main():
         'beproud.django.notify',
     )
 
+    # TODO: 次のコードの役割を確認
+    global_settings.CELERY_TASK_SERIALIZER = "pickle"
+
     global_settings.DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
