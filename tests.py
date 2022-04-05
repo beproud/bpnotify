@@ -25,6 +25,8 @@ def main():
 
     # TODO: 次のコードの役割を確認
     global_settings.CELERY_TASK_SERIALIZER = "pickle"
+    # global_settings.PASSWORD_RESET_TIMEOUT_DAYS = 10
+    # global_settings.PASSWORD_RESET_TIMEOUT = 60
 
     global_settings.DATABASES = {
         'default': {
