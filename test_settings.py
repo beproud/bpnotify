@@ -1,3 +1,7 @@
+# Django3では、標準のdjango.conf.global_settingsの定数をオーバーライドすると例外が発生する場合がある。
+# https://github.com/django/django/blob/70035fb0444ae7c01613374212ca5e3c27c9782c/django/conf/__init__.py#L188
+# そのため、独自のtest用settings定数をこのモジュールに定義する
+
 SECRET_KEY = "SECRET"
 INSTALLED_APPS = (
     'django.contrib.auth',
