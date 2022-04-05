@@ -73,7 +73,7 @@ def main():
     test_runner = test_runner()
     
     # See: https://docs.djangoproject.com/en/1.6/topics/testing/overview/#running-tests
-    failures = test_runner.run_tests(['beproud.django.notify'])
+    failures = test_runner.run_tests(['beproud.django.notify.tests'])
 
     sys.exit(failures)
 
