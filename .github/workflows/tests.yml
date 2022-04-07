@@ -8,6 +8,7 @@ on:
 jobs:
   # ジョブの名称
   test_with_tox:
+    name: build (Python ${{ matrix.python-version }}, Django ${{ matrix.django-version }})
     runs-on: ubuntu-latest
 
     # 並列して実行する各ジョブのPythonバージョン
@@ -41,7 +42,4 @@ jobs:
     # Github Actionsからtoxを実行
     - name: Test with tox
       run: |
-        tox
-      env:
-        DJANGO: ${{ matrix.django-version }}
-        CELERY: ${{ matrix.celery-version }}
+        tox -l
