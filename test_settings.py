@@ -9,7 +9,10 @@ INSTALLED_APPS = (
     'beproud.django.notify',
 )
 
-# TODO: 次のコードの役割を確認
+# kombu.exceptions.EncodeError: Object of type User is not JSON serializable エラーを抑止する
+# (参考)
+#   https://github.com/celery/celery/issues/5922
+#   https://stackoverflow.com/questions/49373825/kombu-exceptions-encodeerror-user-is-not-json-serializable
 CELERY_TASK_SERIALIZER = "pickle"
 
 DATABASES = {

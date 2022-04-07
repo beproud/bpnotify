@@ -43,6 +43,7 @@ setup(
     test_suite='tests.main',
     install_requires=[
         'Django>=2.2',
+        'django-jsonfield>=1.0.1',
         'Celery>=4.2',
         'six',
     ],
