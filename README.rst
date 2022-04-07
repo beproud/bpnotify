@@ -11,7 +11,7 @@ Requirements
 * Celery (4.2, 5.1, 5.2)
 * Django (2.2, 3.2)
 * six
-* mock(>=0.7.2)
+* django-jsonfield (1.0.1)
 
 Links
 =================
