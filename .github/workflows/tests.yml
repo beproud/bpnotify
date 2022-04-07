@@ -42,7 +42,6 @@ jobs:
     # Github Actionsからtoxを実行
     - name: Test with tox
       run: |
-        tox
+        tox -v
       env:
         DJANGO: ${{ matrix.django-version }}
-        CELERY: ${{ matrix.celery-version }}
