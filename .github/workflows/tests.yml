@@ -43,3 +43,7 @@ jobs:
     - name: Test with tox
       run: |
         tox -l
+        tox
+      env:
+        DJANGO: ${{ matrix.django-version }}
+        CELERY: ${{ matrix.celery-version }}
