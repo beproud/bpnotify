@@ -12,7 +12,6 @@ jobs:
 
     # 並列して実行する各ジョブのPythonバージョン
     strategy:
-      max-parallel: 8
       matrix:
         python-version: ['3.6', '3.9']
         django-version: ['2.2', '3.2']
@@ -42,7 +41,7 @@ jobs:
     # Github Actionsからtoxを実行
     - name: Test with tox
       run: |
-        tox -v
+        tox
       env:
         DJANGO: ${{ matrix.django-version }}
         CELERY: ${{ matrix.celery-version }}
