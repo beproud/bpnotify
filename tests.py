@@ -36,7 +36,7 @@ def main():
     # test runnerオブジェクトを生成
     test_runner = TestRunner()
 
-    # test runnerにbpmailerの単体テストのPathを渡して、bpmailerの単体テストを実行する
+    # test runnerにbpnotifyの単体テストのPathを渡して、bpnotifyの単体テストを実行する
     failures = test_runner.run_tests(['beproud.django.notify.tests'])
 
     sys.exit(failures)
