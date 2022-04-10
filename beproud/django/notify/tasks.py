@@ -9,7 +9,7 @@ from celery import shared_task
 from beproud.django.notify import notify_now
 
 @shared_task(bind=True)
-def Notify(self, targets, notify_type, extra_data={}, include_media=None, exclude_media=[],
+def notify(self, targets, notify_type, extra_data={}, include_media=None, exclude_media=[],
             max_retries=3, retry_countdown=10, **kwargs):
     try:
         return notify_now(
