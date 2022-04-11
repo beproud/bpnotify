@@ -14,4 +14,5 @@ Features:
 
 Incompatible Changes:
 
+- Celeryタスクのメソッド名を `Notify` から `notify` に変更しました。
 - mockパッケージに関して、標準ライブラリのunitestに含まれるmockを使用するように変更しました。
