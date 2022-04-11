@@ -1,6 +1,6 @@
 #:coding=utf8:
 
-import mock
+from unittest import mock
 
 from django.test import TestCase
 from django.contrib.auth.models import User
@@ -40,7 +40,7 @@ class TaskTests(TestCase):
         Simple task to test the Notify task.
         """
         user = User.objects.get(pk=2)
-        notify_tasks.Notify.delay(
+        notify_tasks.notify.delay(
             targets=[user],
             notify_type='private_msg',
         )
@@ -67,7 +67,7 @@ class TaskTests(TestCase):
         notify_now.side_effect = _notify_now
 
         user = User.objects.get(pk=2)
-        notify_tasks.Notify.delay(
+        notify_tasks.notify.delay(
             targets=[user],
             notify_type='private_msg',
         )
@@ -92,7 +92,7 @@ class TaskTests(TestCase):
         notify_now.side_effect = _notify_now
 
         user = User.objects.get(pk=2)
-        notify_tasks.Notify.delay(
+        notify_tasks.notify.delay(
             targets=[user],
             notify_type='private_msg',
         )
