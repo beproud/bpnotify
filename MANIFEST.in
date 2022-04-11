@@ -2,3 +2,4 @@ recursive-include beproud/django/notify/tests/templates *
 recursive-include beproud/django/notify/templates *
 recursive-include beproud/django/notify/fixtures *
 include README.rst
+include CHANGES.rst
