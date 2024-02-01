@@ -3,10 +3,8 @@ import six
 
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.db import models
-
-import jsonfield
 
 from beproud.django.notify.api import _get_media_map
 
@@ -42,7 +40,7 @@ class Notification(models.Model):
     notify_type = models.CharField(_('notify type'), max_length=100, db_index=True)
     media = models.CharField(_('media'), max_length=100, choices=MediaChoices(), db_index=True)
 
-    extra_data = jsonfield.JSONField(_('extra data'), null=True, blank=True)
+    extra_data = models.JSONField(_('extra data'), null=True, blank=True)
 
     ctime = models.DateTimeField(_('created'), auto_now_add=True, db_index=True)
 

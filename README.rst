@@ -7,11 +7,10 @@
 Requirements
 ============
 
-* Python (3.6, 3.9)
-* Celery (4.2, 5.1, 5.2)
-* Django (2.2, 3.2)
+* Python (3.9, 3.10, 3.11, 3.12)
+* Celery (5.2, 5.3)
+* Django (3.2, 4.2)
 * six
-* django-jsonfield (1.0.1)
 
 Links
 =================
