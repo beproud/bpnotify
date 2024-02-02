@@ -3,7 +3,6 @@
 # そのため、testではdjango.conf.global_settingsを直接利用せず、このtest用settings定数を使用する。
 
 import os
-import celery
 
 SECRET_KEY = "SECRET"
 INSTALLED_APPS = (
@@ -57,6 +56,5 @@ BPNOTIFY_MEDIA = {
 }
 BPNOTIFY_SETTINGS_STORAGE = 'beproud.django.notify.storage.db.DBStorage'
 
-app = celery.Celery()
-app.config_from_object('django.conf:settings', namespace='CELERY')
-app.autodiscover_tasks(lambda: INSTALLED_APPS)
+# The name of the class to use to run the test suite
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
