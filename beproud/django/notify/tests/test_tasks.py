@@ -46,9 +46,9 @@ class TaskTests(TestCase):
         )
 
         private_messages = Notification.objects.filter(media="news")
-        self.assertEquals(len(private_messages), 1)
-        self.assertEquals(private_messages[0].notify_type, 'private_msg')
-        self.assertEquals(private_messages[0].target, user)
+        self.assertEqual(len(private_messages), 1)
+        self.assertEqual(private_messages[0].notify_type, 'private_msg')
+        self.assertEqual(private_messages[0].target, user)
 
     @mock.patch.object(notify_tasks, 'notify_now')
     def test_notify_task_retry(self, notify_now):
@@ -73,7 +73,7 @@ class TaskTests(TestCase):
         )
 
         # First call + 2 retries = 3 calls
-        self.assertEquals(notify_now.call_count, 3)
+        self.assertEqual(notify_now.call_count, 3)
 
     @mock.patch.object(notify_tasks, 'notify_now')
     def test_notify_task_retry_fail(self, notify_now):
@@ -98,4 +98,4 @@ class TaskTests(TestCase):
         )
 
         # First call + 3 retries = 4 calls
-        self.assertEquals(notify_now.call_count, 4)
+        self.assertEqual(notify_now.call_count, 4)
