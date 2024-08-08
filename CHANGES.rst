@@ -1,6 +1,14 @@
 ChangeLog
 =========
 
+0.50 (2024-08-XX)
+===================
+
+Incompatible Changes:
+
+* Drop Django3.2&Celery5.2
+* Migrate from ``python setup.py test`` to ``pytest``
+
 0.49 (2024-02-XX)
 ===================
 

@@ -1,3 +1,6 @@
+import os
+import celery
+
 # Django3では、標準のdjango.conf.global_settingsの定数をオーバーライドすると例外が発生する場合がある。
 # https://github.com/django/django/blob/70035fb0444ae7c01613374212ca5e3c27c9782c/django/conf/__init__.py#L188
 # そのため、testではdjango.conf.global_settingsを直接利用せず、このtest用settings定数を使用する。
@@ -9,12 +12,6 @@ INSTALLED_APPS = (
     'beproud.django.notify',
 )
 
-# kombu.exceptions.EncodeError: Object of type User is not JSON serializable エラーを抑止する
-# (参考)
-#   https://github.com/celery/celery/issues/5922
-#   https://stackoverflow.com/questions/49373825/kombu-exceptions-encodeerror-user-is-not-json-serializable
-CELERY_TASK_SERIALIZER = "pickle"
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -22,7 +19,6 @@ DATABASES = {
     }
 }
 
-import os
 BASE_PATH = os.path.dirname(__file__)
 
 TEMPLATES = [
@@ -33,8 +29,7 @@ TEMPLATES = [
         ],
     },
 ]
-
-CELERY_TASK_ALWAYS_EAGER = True
+USE_TZ = False # For Django 5.0+
 
 BPNOTIFY_MEDIA = {
     "news": {
@@ -55,6 +50,16 @@ BPNOTIFY_MEDIA = {
 }
 BPNOTIFY_SETTINGS_STORAGE = 'beproud.django.notify.storage.db.DBStorage'
 
-# The name of the class to use to run the test suite
-TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+# For Celery Tests
+app = celery.Celery()
+app.config_from_object('django.conf:settings', namespace='CELERY')
+app.autodiscover_tasks(lambda: INSTALLED_APPS)
 
+BROKER_BACKEND = 'memory'
+CELERY_TASK_ALWAYS_EAGER = True
+
+# kombu.exceptions.EncodeError: Object of type User is not JSON serializable エラーを抑止する
+# (参考)
+#   https://github.com/celery/celery/issues/5922
+#   https://stackoverflow.com/questions/49373825/kombu-exceptions-encodeerror-user-is-not-json-serializable
+CELERY_TASK_SERIALIZER = "pickle"
