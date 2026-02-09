@@ -7,12 +7,12 @@ ChangeLog
 Features:
 
 * Add Support Python 3.13, 3.14
-* Add Support Django 5.1, 5.2
+* Add Support Django 5.2
 * Add Support Celery 5.6
 
 Incompatible Changes:
 
-* Drop Python 3.9
+* Drop Python 3.9 & Django 5.1
 * Migrate to implicit namespace package (PEP 420)
 
 
