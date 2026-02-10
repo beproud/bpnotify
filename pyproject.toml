@@ -1,28 +1,30 @@
 [build-system]
-requires = ["setuptools>=61.0.0", "wheel"]
+requires = ["setuptools>=77.0.3", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "bpnotify"
-version = "0.50"
+version = "0.51"
 authors = [
   { name="BeProud Inc.", email="project@beproud.jp" },
 ]
 description = "Notification routing for Django"
 readme = "README.rst"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 keywords=["django"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "License :: OSI Approved :: BSD License",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Framework :: Django",
   "Framework :: Django :: 4.2",
+  "Framework :: Django :: 5.2",
   "Intended Audience :: Developers",
   "Environment :: Plugins",
   "Topic :: Software Development :: Libraries :: Python Modules",
@@ -34,3 +36,4 @@ Homepage = "https://github.com/beproud/bpnotify/"
 
 [tool.setuptools.packages.find]
 where = ["."]
+include = ["beproud.django.notify*"]
